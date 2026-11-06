@@ -1,0 +1,186 @@
+erDiagram
+    regions ||--o{ districts : contains
+    districts ||--o{ government_offices : hosts
+    government_institutions ||--o{ government_institutions : "parent of"
+    government_institutions ||--o{ government_offices : runs
+    government_institutions ||--o{ government_services : provides
+    government_institutions ||--o{ official_sources : publishes
+    service_categories ||--o{ government_services : groups
+    government_services ||--o{ service_variants : "has cases"
+    government_services ||--o{ required_documents : needs
+    government_services ||--o{ service_fees : charges
+    government_services ||--o{ processing_information : takes
+    government_services ||--o{ service_steps : "follows"
+    government_services ||--o{ service_offices : "offered through"
+    government_offices ||--o{ service_offices : offers
+    government_services ||--|{ verification_records : "checked by section"
+    government_services |o--o{ citizen_reports : receives
+    government_services |o--o{ daily_views : counted
+    government_institutions |o--o{ daily_views : counted
+    government_services |o--o{ search_logs : "top result"
+    government_institutions |o--o{ search_logs : "top result"
+    service_variants |o--o{ required_documents : "specific to"
+    service_variants |o--o{ service_fees : "specific to"
+    service_variants |o--o{ processing_information : "specific to"
+    service_variants |o--o{ service_steps : "specific to"
+    official_sources |o--o{ required_documents : cites
+    official_sources |o--o{ service_fees : cites
+    official_sources |o--o{ processing_information : cites
+    official_sources |o--o{ service_steps : cites
+    official_sources |o--o{ service_offices : cites
+    official_sources |o--o{ government_offices : cites
+    official_sources |o--o{ verification_records : supports
+    admin_users |o--o{ verification_records : verifies
+    admin_users |o--o{ citizen_reports : resolves
+    admin_users |o--o{ audit_logs : performs
+
+    regions {
+        int id PK
+        string name UK
+    }
+    districts {
+        int id PK
+        int region_id FK
+        string name UK
+        string sub_region
+    }
+    admin_users {
+        int id PK
+        string email UK
+        string password_hash
+        string role
+        bool is_active
+    }
+    government_institutions {
+        int id PK
+        int parent_id FK
+        string name UK
+        string slug UK
+        string acronym
+        string verification_status
+    }
+    official_sources {
+        int id PK
+        int institution_id FK
+        string title
+        string url UK
+        date last_checked_on
+    }
+    government_offices {
+        int id PK
+        int institution_id FK
+        int district_id FK
+        int source_id FK
+        string name
+        string physical_address
+        float latitude
+        float longitude
+        string verification_status
+    }
+    service_categories {
+        int id PK
+        string name UK
+        string slug UK
+    }
+    government_services {
+        int id PK
+        int institution_id FK
+        int category_id FK
+        string name
+        string slug UK
+        string delivery_mode
+        bool is_demo
+        bool is_archived
+    }
+    service_variants {
+        int id PK
+        int service_id FK
+        string name
+    }
+    required_documents {
+        int id PK
+        int service_id FK
+        int variant_id FK
+        int source_id FK
+        string name
+        bool is_mandatory
+        int photocopies
+        int max_age_days
+    }
+    service_fees {
+        int id PK
+        int service_id FK
+        int variant_id FK
+        int source_id FK
+        string fee_name
+        string service_speed
+        int amount_ugx
+        date effective_from
+    }
+    processing_information {
+        int id PK
+        int service_id FK
+        int variant_id FK
+        int source_id FK
+        string service_speed
+        int min_working_days
+        int max_working_days
+        string basis
+    }
+    service_steps {
+        int id PK
+        int service_id FK
+        int variant_id FK
+        int source_id FK
+        int step_number
+        string stage
+        string title
+    }
+    service_offices {
+        int id PK
+        int service_id FK
+        int office_id FK
+        int source_id FK
+        string verification_status
+    }
+    verification_records {
+        int id PK
+        int service_id FK
+        int source_id FK
+        int verified_by_id FK
+        int last_edited_by_id FK
+        string section
+        string status
+        date review_due_on
+    }
+    citizen_reports {
+        int id PK
+        int service_id FK
+        int resolved_by_id FK
+        string reference_code UK
+        string problem_type
+        string status
+    }
+    search_logs {
+        int id PK
+        int top_service_id FK
+        int top_institution_id FK
+        string query_text
+        int results_count
+    }
+    daily_views {
+        int id PK
+        int service_id FK
+        int institution_id FK
+        date view_date
+        int view_count
+    }
+    audit_logs {
+        int id PK
+        int admin_user_id FK
+        string action
+        string table_name
+        int record_id
+        string old_values
+        string new_values
+    }

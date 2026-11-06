@@ -1,0 +1,31 @@
+# Secrets: never commit these
+.env
+.env.*
+!.env.example
+
+# Virtual environment: rebuilt from requirements.txt
+.venv/
+venv/
+
+# Python generated files
+__pycache__/
+*.py[cod]
+
+# Local databases: rebuilt from migrations and seed data
+instance/
+*.db
+*.sqlite
+*.sqlite3
+
+# Test and tool output
+.pytest_cache/
+.coverage
+htmlcov/
+
+# PyCharm personal settings
+.idea/
+
+# Operating system files
+Thumbs.db
+Desktop.ini
+.DS_Store
