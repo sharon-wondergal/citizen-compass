@@ -1,0 +1,151 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import status_badge, demo_badge, empty_state, post_button %}
+
+{% block title %}{{ service.name }} | Manage | Citizen Compass{% endblock %}
+
+{% set can_edit = current_user.role in edit_roles %}
+
+{# A heading with an Add button, for one list of checklist rows. #}
+{% macro list_heading(title, kind_name, singular) %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+    <h2 class="h5 mb-0">{{ title }}</h2>
+    {% if current_user.role in edit_roles %}
+    <a class="btn btn-sm btn-cc-primary" href="{{ url_for('admin.new_row', service_id=service_id, kind_name=kind_name) }}">Add {{ singular }}</a>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro row_actions(kind_name, item_id, confirm) %}
+{% if current_user.role in edit_roles %}
+<div class="admin-actions">
+    <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_row', service_id=service_id, kind_name=kind_name, item_id=item_id) }}">Edit</a>
+    {{ post_button(url_for('admin.delete_row', service_id=service_id, kind_name=kind_name, item_id=item_id), "Delete", "btn-outline-danger", confirm or "Delete this row? This can't be undone.") }}
+</div>
+{% endif %}
+{% endmacro %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container checklist-page">
+        <p><a href="{{ url_for('admin.services') }}">Back to services</a></p>
+
+        <h1 class="h2">{{ service.name }}</h1>
+        <p class="mb-2">{{ service.institution.name }} · {{ service.category.name }}</p>
+        <p class="d-flex flex-wrap gap-2 mb-3">
+            {{ status_badge(overall, status_labels[overall]) }}
+            {% if service.is_demo %}{{ demo_badge() }}{% endif %}
+            {% if service.is_archived %}<span class="status-badge status-unavailable">Archived</span>{% endif %}
+        </p>
+
+        <div class="admin-actions mb-4">
+            {% if can_edit %}
+            <a class="btn btn-sm btn-cc-primary" href="{{ url_for('admin.edit_service', service_id=service.id) }}">Edit service details</a>
+            {{ post_button(url_for('admin.archive_service', service_id=service.id), "Restore service" if service.is_archived else "Archive service", confirm=none if service.is_archived else "Archive this service? Citizens will no longer see it.") }}
+            {% endif %}
+            {% if not service.is_archived %}
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('services.detail', slug=service.slug) }}">View citizen page</a>
+            {% endif %}
+        </div>
+
+        <section class="checklist-section">
+            <h2 class="h5">Verification status</h2>
+            <p class="section-dates">Any change to a section sends it back to pending verification.</p>
+            <ul class="admin-list">
+                {% for section, status in sections %}
+                <li><span class="text-capitalize">{{ section }}</span> {{ status_badge(status, status_labels[status]) }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="checklist-section">
+            {{ list_heading("Situations", "variants", "situation") }}
+            {% if service.variants %}
+            <ul class="admin-list">
+                {% for item in service.variants %}
+                <li>
+                    <span>{{ item.name }}{% if item.is_default %} <span class="section-dates">· shown first</span>{% endif %}</span>
+                    {{ row_actions("variants", item.id, "Delete this situation and everything specific to it?") }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}{{ empty_state("No situations. Add them only if requirements differ, such as new or lost.") }}{% endif %}
+        </section>
+
+        <section class="checklist-section">
+            {{ list_heading("Steps", "steps", "step") }}
+            {% if service.steps %}
+            <ul class="admin-list">
+                {% for item in service.steps %}
+                <li><span>{{ item.step_number }}. {{ item.title }}</span>{{ row_actions("steps", item.id) }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}{{ empty_state("No steps added yet.") }}{% endif %}
+        </section>
+
+        <section class="checklist-section">
+            {{ list_heading("Required documents", "documents", "document") }}
+            {% if service.documents %}
+            <ul class="admin-list">
+                {% for item in service.documents %}
+                <li>
+                    <span>{{ item.name }} <span class="section-dates">· {{ "Required" if item.is_mandatory else "Optional" }}{% if item.variant %} · {{ item.variant.name }}{% endif %}</span></span>
+                    {{ row_actions("documents", item.id) }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}{{ empty_state("No documents added yet.") }}{% endif %}
+        </section>
+
+        <section class="checklist-section">
+            {{ list_heading("Fees", "fees", "fee") }}
+            {% if service.fees %}
+            <ul class="admin-list">
+                {% for item in service.fees %}
+                <li>
+                    <span>{{ item.fee_name }} <span class="section-dates">· {% if item.amount_ugx is none %}Amount not confirmed{% else %}{{ item.amount_ugx|ugx }}{% endif %}</span></span>
+                    {{ row_actions("fees", item.id) }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}{{ empty_state("No fees added yet.") }}{% endif %}
+        </section>
+
+        <section class="checklist-section">
+            {{ list_heading("Processing time", "processing", "processing time") }}
+            {% if service.processing %}
+            <ul class="admin-list">
+                {% for item in service.processing %}
+                <li>
+                    <span>{{ describe_duration(item) }} <span class="section-dates">· {{ basis_labels[item.basis] }}</span></span>
+                    {{ row_actions("processing", item.id) }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}{{ empty_state("No processing time added yet.") }}{% endif %}
+        </section>
+
+        <section class="checklist-section">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                <h2 class="h5 mb-0">Offices offering this service</h2>
+                {% if can_edit %}
+                <a class="btn btn-sm btn-cc-primary" href="{{ url_for('admin.new_office_link', service_id=service.id) }}">Link an office</a>
+                {% endif %}
+            </div>
+            {% if service.office_links %}
+            <ul class="admin-list">
+                {% for link in service.office_links %}
+                <li>
+                    <span>{{ link.office.name }} <span class="section-dates">· {{ link.office.district.name }}</span></span>
+                    {% if can_edit %}
+                    <div class="admin-actions">
+                        {{ post_button(url_for('admin.delete_office_link', service_id=service.id, link_id=link.id), "Remove", "btn-outline-danger", "Remove this office from the service?") }}
+                    </div>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}{{ empty_state("No offices linked yet.") }}{% endif %}
+        </section>
+    </div>
+</section>
+{% endblock %}

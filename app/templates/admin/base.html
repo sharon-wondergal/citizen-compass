@@ -3,7 +3,19 @@
 {% block navigation %}
 <ul class="navbar-nav ms-auto align-items-lg-center">
     <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
-    <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Public site</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.services') }}">Services</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.records', kind_name='institutions') }}">Institutions</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.records', kind_name='offices') }}">Offices</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.records', kind_name='sources') }}">Sources</a></li>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{{ url_for('admin.records', kind_name='categories') }}">Categories</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('admin.records', kind_name='regions') }}">Regions</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('admin.records', kind_name='districts') }}">Districts</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('main.index') }}">Public site</a></li>
+        </ul>
+    </li>
     <li class="nav-item">
         <form action="{{ url_for('auth.logout') }}" method="post">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -11,4 +23,8 @@
         </form>
     </li>
 </ul>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
 {% endblock %}

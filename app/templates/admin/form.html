@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import form_field %}
+
+{% block title %}{{ title }} | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container admin-form">
+        <p><a href="{{ back_url }}">Back</a></p>
+        <h1 class="h2">{{ title }}</h1>
+        <p class="section-intro">Only enter information from an official source. If something isn't confirmed, leave it blank.</p>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {% for field in form %}
+            {% if field.type not in ("CSRFTokenField", "HiddenField", "SubmitField") %}
+            {{ form_field(field) }}
+            {% endif %}
+            {% endfor %}
+            {{ form.submit(class="btn btn-cc-primary px-4") }}
+            <a class="btn btn-outline-secondary" href="{{ back_url }}">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

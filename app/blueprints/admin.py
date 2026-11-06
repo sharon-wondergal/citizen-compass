@@ -8,6 +8,9 @@ from app.logic.dashboard import build_dashboard
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
+# Verifiers check information but don't change it, which keeps approval separate.
+EDIT_ROLES = ("editor", "super_admin")
+
 
 @admin_bp.after_request
 def keep_pages_private(response):
@@ -19,7 +22,7 @@ def keep_pages_private(response):
 
 @admin_bp.context_processor
 def admin_template_values():
-    return {"role_labels": ROLE_LABELS}
+    return {"role_labels": ROLE_LABELS, "edit_roles": EDIT_ROLES}
 
 
 @admin_bp.route("")

@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import status_badge, demo_badge, empty_state, pagination %}
+
+{% block title %}Manage services | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+            <h1 class="mb-0">Services</h1>
+            {% if current_user.role in edit_roles %}
+            <a class="btn btn-cc-primary" href="{{ url_for('admin.new_service') }}">Add a service</a>
+            {% endif %}
+        </div>
+
+        <form class="d-flex gap-2 mb-3" method="get" role="search">
+            <label class="visually-hidden" for="admin-search">Search services</label>
+            <input class="form-control" id="admin-search" name="q" type="search" maxlength="100" value="{{ query }}" placeholder="Search by name">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </form>
+
+        {% if results.items %}
+        <ul class="admin-list">
+            {% for item in results.items %}
+            {% set service = item.service %}
+            <li>
+                <div>
+                    <a class="fw-bold" href="{{ url_for('admin.manage_service', service_id=service.id) }}">{{ service.name }}</a>
+                    <div class="section-dates mb-1">{{ service.institution.name }}</div>
+                    {{ status_badge(item.status, status_labels[item.status]) }}
+                    {% if service.is_demo %}{{ demo_badge() }}{% endif %}
+                    {% if service.is_archived %}<span class="status-badge status-unavailable">Archived</span>{% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {{ pagination(results, 'admin.services', {'q': query} if query else {}) }}
+        {% else %}
+        {{ empty_state("No services found.") }}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

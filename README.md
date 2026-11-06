@@ -22,7 +22,8 @@ Under development, stage by stage. The citizen pages work: homepage, service sea
 | 8 | Service preparation checklist | Done |
 | 9 | Institution and office directories | Done |
 | 10 | Administrator login and dashboard | Done |
-| 11 | Service management and verification | Next |
+| 11A | Managing records from the admin area | Done |
+| 11B | Verification workflow | Next |
 
 ## Requirements
 

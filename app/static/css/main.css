@@ -599,6 +599,37 @@ a.info-card:hover {
     max-width: 26rem;
 }
 
+.admin-form {
+    max-width: 40rem;
+}
+
+.admin-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.admin-list li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--cc-border);
+    overflow-wrap: anywhere;
+}
+
+.admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.btn-sm {
+    min-height: 40px;
+}
+
 .stat-tile {
     display: flex;
     flex-direction: column;
