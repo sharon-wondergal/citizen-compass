@@ -16,7 +16,8 @@ Under development, stage by stage. The application starts and shows a temporary 
 | 2 | Database design and ERD | Done: see [docs/database-design.md](docs/database-design.md) |
 | 3 | PyCharm project and virtual environment | Done |
 | 4 | Flask configuration | Done |
-| 5 | Database models and relationships | Next |
+| 5 | Database models and relationships | Done |
+| 6 | Homepage and navigation | Next |
 
 ## Requirements
 
@@ -56,6 +57,12 @@ Run these commands in the PyCharm Terminal, from the project folder.
 
    ```bash
    python -c "import secrets; print(secrets.token_hex(32))"
+   ```
+
+6. Create the database tables:
+
+   ```bash
+   flask db upgrade
    ```
 
 ## Run the application

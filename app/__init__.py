@@ -6,6 +6,7 @@ their own app with a temporary database, separate from the development one.
 
 from flask import Flask
 
+from app import models  # noqa: F401 - loading the models registers the tables
 from app.blueprints.main import main_bp
 from app.config import get_config, validate_config
 from app.extensions import csrf, db, limiter, migrate
