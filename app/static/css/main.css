@@ -593,6 +593,95 @@ a.info-card:hover {
     border: 0;
 }
 
+/* ---------- Administrator pages ---------- */
+
+.login-page {
+    max-width: 26rem;
+}
+
+.stat-tile {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--cc-border);
+    border-radius: 0.75rem;
+    background: var(--cc-surface);
+}
+
+.stat-value {
+    color: var(--cc-navy);
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.stat-label {
+    color: var(--cc-muted);
+    font-size: 0.9rem;
+}
+
+.bar-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.4rem;
+}
+
+.bar-table th {
+    width: 45%;
+    padding-right: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.bar-table .status-badge {
+    white-space: normal;
+}
+
+.bar-cell {
+    width: 100%;
+    min-width: 3rem;
+}
+
+.bar-track {
+    display: block;
+    height: 0.75rem;
+    border-radius: 0 4px 4px 0;
+    background: var(--cc-section);
+}
+
+.bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: 0 4px 4px 0;
+    background: var(--cc-navy);
+}
+
+.bar-value {
+    padding-left: 0.6rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+.recent-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.recent-list li {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0 1rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid var(--cc-border);
+}
+
+.recent-list .section-dates {
+    margin: 0;
+}
+
 /* ---------- Plain text pages ---------- */
 
 .text-page {

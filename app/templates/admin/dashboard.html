@@ -1,0 +1,98 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import status_badge, empty_state %}
+
+{% block title %}Dashboard | Citizen Compass{% endblock %}
+
+{% macro stat_tile(label, value) %}
+<div class="col-6 col-lg-3">
+    <div class="stat-tile">
+        <span class="stat-value">{{ value }}</span>
+        <span class="stat-label">{{ label }}</span>
+    </div>
+</div>
+{% endmacro %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <h1>Dashboard</h1>
+        <p class="section-intro">Signed in as {{ current_user.full_name }} ({{ role_labels[current_user.role] }}).</p>
+
+        <div class="row g-3 mb-4">
+            {{ stat_tile("Services", dashboard.total_services) }}
+            {{ stat_tile("Institutions", dashboard.total_institutions) }}
+            {{ stat_tile("Offices", dashboard.total_offices) }}
+            {{ stat_tile("Open citizen reports", dashboard.open_reports) }}
+            {{ stat_tile("Verified services", dashboard.verified_services) }}
+            {{ stat_tile("Awaiting verification", dashboard.pending_services) }}
+            {{ stat_tile("Outdated services", dashboard.outdated_services) }}
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="info-card">
+                    <h2 class="h5">Services by verification status</h2>
+                    <table class="bar-table">
+                        <caption class="visually-hidden">Number of services with each verification status</caption>
+                        <thead class="visually-hidden">
+                            <tr><th scope="col">Status</th><th scope="col">Share</th><th scope="col">Services</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for row in dashboard.status_rows %}
+                            <tr title="{{ row.label }}: {{ row.count }}">
+                                <th scope="row">{{ status_badge(row.status, row.label) }}</th>
+                                <td class="bar-cell"><span class="bar-track"><span class="bar-fill" style="width: {{ row.percent }}%"></span></span></td>
+                                <td class="bar-value">{{ row.count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="info-card">
+                    <h2 class="h5">Services by category</h2>
+                    {% if dashboard.category_rows %}
+                    <table class="bar-table">
+                        <caption class="visually-hidden">Number of services in each category</caption>
+                        <thead class="visually-hidden">
+                            <tr><th scope="col">Category</th><th scope="col">Share</th><th scope="col">Services</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for row in dashboard.category_rows %}
+                            <tr title="{{ row.label }}: {{ row.count }}">
+                                <th scope="row">{{ row.label }}</th>
+                                <td class="bar-cell"><span class="bar-track"><span class="bar-fill" style="width: {{ row.percent }}%"></span></span></td>
+                                <td class="bar-value">{{ row.count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    {{ empty_state("No services have been added yet.") }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="info-card">
+                    <h2 class="h5">Recently updated records</h2>
+                    {% if dashboard.recent %}
+                    <ul class="recent-list">
+                        {% for record in dashboard.recent %}
+                        <li>
+                            <span>{{ record.name }} <span class="section-dates">· {{ record.kind }}</span></span>
+                            <span class="section-dates">{{ record.updated_at|long_date }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    {{ empty_state("No records have been added yet.") }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

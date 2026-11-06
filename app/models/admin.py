@@ -1,12 +1,14 @@
-"""Administrator accounts. Login behaviour is added in Stage 10."""
+"""Administrator accounts."""
 
+from flask_login import UserMixin
 from sqlalchemy import text
+from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.extensions import db
 from app.models.base import ADMIN_ROLES, TimestampMixin, choice_check, flag, minimum_check
 
 
-class AdminUser(TimestampMixin, db.Model):
+class AdminUser(UserMixin, TimestampMixin, db.Model):
     __tablename__ = "admin_users"
     __table_args__ = (
         choice_check("role", ADMIN_ROLES),
@@ -24,6 +26,16 @@ class AdminUser(TimestampMixin, db.Model):
     )
     locked_until = db.Column(db.DateTime)
     last_login_at = db.Column(db.DateTime)
+
+    def set_password(self, password):
+        """Store a one-way hash. The password itself is never saved."""
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def has_role(self, *roles):
+        return self.role in roles
 
     def __repr__(self):
         return f"<AdminUser {self.email}>"

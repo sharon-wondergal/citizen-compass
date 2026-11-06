@@ -21,7 +21,8 @@ Under development, stage by stage. The citizen pages work: homepage, service sea
 | 7 | Service directory and search | Done |
 | 8 | Service preparation checklist | Done |
 | 9 | Institution and office directories | Done |
-| 10 | Administrator login and dashboard | Next |
+| 10 | Administrator login and dashboard | Done |
+| 11 | Service management and verification | Next |
 
 ## Requirements
 
@@ -82,6 +83,14 @@ Run these commands in the PyCharm Terminal, from the project folder.
    ```
 
    Remove them at any time with `flask seed remove-demo`. They aren't real government information.
+
+9. Create an administrator. You'll be asked for a password, which stays hidden as you type:
+
+   ```bash
+   flask admin create
+   ```
+
+   Roles are `editor`, `verifier` and `super_admin`. Sign in at `/admin/login`.
 
 ## Run the application
 

@@ -6,6 +6,15 @@ from app.extensions import db
 
 
 def register_error_handlers(app):
+    @app.errorhandler(400)
+    def bad_request(error):
+        # Also shown when a form's security token has expired.
+        return render_template("errors/400.html"), 400
+
+    @app.errorhandler(403)
+    def forbidden(error):
+        return render_template("errors/403.html"), 403
+
     @app.errorhandler(404)
     def page_not_found(error):
         return render_template("errors/404.html"), 404

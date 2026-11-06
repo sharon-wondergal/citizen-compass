@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Please try again | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container text-page">
+        <h1>Please try again</h1>
+        <p>We couldn't process that request. If you were using a form, it may have expired. Go back, reload the page and try again.</p>
+        <a class="btn btn-cc-primary" href="{{ url_for('main.index') }}">Go to the homepage</a>
+    </div>
+</section>
+{% endblock %}
