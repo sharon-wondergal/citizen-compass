@@ -38,6 +38,36 @@
 {% endif %}
 {% endmacro %}
 
+{# The details of one office. Anything unconfirmed says so instead of guessing. #}
+{% macro office_facts(office, note=none) %}
+<dl class="fact-list">
+    <div><dt>Address</dt><dd>{{ office.physical_address or "Address not yet verified" }}</dd></div>
+    <div><dt>District</dt><dd>{{ office.district.name }}</dd></div>
+    <div><dt>Region</dt><dd>{{ office.district.region.name }}</dd></div>
+    <div><dt>Opening hours</dt><dd>{{ office.opening_hours or "Not confirmed" }}</dd></div>
+    {% if office.phone %}<div><dt>Telephone</dt><dd><a href="tel:{{ office.phone }}">{{ office.phone }}</a></dd></div>{% endif %}
+    {% if office.email %}<div><dt>Email</dt><dd><a href="mailto:{{ office.email }}">{{ office.email }}</a></dd></div>{% endif %}
+    {% if office.website %}<div><dt>Website</dt><dd><a href="{{ office.website }}" target="_blank" rel="noopener noreferrer">{{ office.website }}</a></dd></div>{% endif %}
+    {% if note %}<div><dt>Service note</dt><dd>{{ note }}</dd></div>{% endif %}
+</dl>
+{% endmacro %}
+
+{# Links to each page of results. #}
+{% macro pagination(results, endpoint, values) %}
+{% if results.pages > 1 %}
+<nav class="mt-4" aria-label="Result pages">
+    <ul class="pagination flex-wrap">
+        {% for number in range(1, results.pages + 1) %}
+        <li class="page-item {% if number == results.page %}active{% endif %}">
+            <a class="page-link" href="{{ url_for(endpoint, page=number, **values) }}"
+               {% if number == results.page %}aria-current="page"{% endif %}>{{ number }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+{% endmacro %}
+
 {# A card that is a link only when there is a real page to link to. #}
 {% macro info_card(href=none) %}
 {% if href %}

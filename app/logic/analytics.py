@@ -10,22 +10,30 @@ from app.extensions import db
 from app.models import DailyView
 
 
-def record_service_view(service_id, today=None):
-    """Add one to today's total for a service.
+def add_view(today, **record):
+    """Add one to today's total for a service or an institution.
 
     Only the daily total is stored, never who viewed the page. A problem here
-    must not stop a citizen from seeing their checklist.
+    must not stop a citizen from seeing the page.
     """
     today = today or date.today()
     try:
         updated = db.session.execute(
             update(DailyView)
-            .where(DailyView.view_date == today, DailyView.service_id == service_id)
+            .filter_by(view_date=today, **record)
             .values(view_count=DailyView.view_count + 1)
         ).rowcount
         if not updated:
-            db.session.add(DailyView(view_date=today, service_id=service_id, view_count=1))
+            db.session.add(DailyView(view_date=today, view_count=1, **record))
         db.session.commit()
     except SQLAlchemyError:
         db.session.rollback()
-        current_app.logger.exception("Could not record a service view")
+        current_app.logger.exception("Could not record a page view")
+
+
+def record_service_view(service_id, today=None):
+    add_view(today, service_id=service_id)
+
+
+def record_institution_view(institution_id, today=None):
+    add_view(today, institution_id=institution_id)

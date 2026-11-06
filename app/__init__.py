@@ -7,6 +7,7 @@ their own app with a temporary database, separate from the development one.
 from flask import Flask
 
 from app import models  # noqa: F401 - loading the models registers the tables
+from app.blueprints.directory import directory_bp
 from app.blueprints.main import main_bp
 from app.blueprints.services import services_bp
 from app.cli import register_commands
@@ -43,3 +44,4 @@ def register_extensions(app):
 def register_blueprints(app):
     app.register_blueprint(main_bp)
     app.register_blueprint(services_bp)
+    app.register_blueprint(directory_bp)

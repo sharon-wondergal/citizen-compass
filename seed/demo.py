@@ -145,8 +145,13 @@ def seed_demo_data():
     institutions = {}
     for name, slug, acronym in DEMO_INSTITUTIONS:
         institutions[slug] = GovernmentInstitution(
-            name=name, slug=slug, acronym=acronym, is_demo=True
+            name=name,
+            slug=slug,
+            acronym=acronym,
+            description="A fictional institution for testing Citizen Compass. It doesn't exist.",
+            is_demo=True,
         )
+    institutions[DEMO_INSTITUTIONS[1][1]].parent = institutions[first_slug]
     db.session.add_all(institutions.values())
 
     source = OfficialSource(

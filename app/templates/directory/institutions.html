@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% from "macros.html" import status_badge, demo_badge, info_card, pagination %}
+
+{% block title %}Government institutions | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <h1>Government institutions</h1>
+        <p class="section-intro">Find a ministry, department or agency, and see the services and offices we've listed for it. Each record shows whether its details have been verified.</p>
+
+        <form action="{{ url_for('directory.institutions') }}" method="get" role="search" class="row g-2 align-items-end mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold" for="institution-search">Name or acronym</label>
+                <input class="form-control" id="institution-search" name="q" type="search" maxlength="100" value="{{ filters.query }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold" for="institution-type">Type</label>
+                <select class="form-select" id="institution-type" name="type">
+                    <option value="">All types</option>
+                    {% for value, label in type_labels.items() %}
+                    <option value="{{ value }}" {% if value == filters.institution_type %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-cc-primary w-100" type="submit">Search</button>
+            </div>
+        </form>
+
+        <p class="fw-bold" role="status">{{ results.total }} {{ "institution" if results.total == 1 else "institutions" }} found</p>
+
+        {% if results.items %}
+        <div class="row g-3">
+            {% for item in results.items %}
+            {% set institution = item.institution %}
+            <div class="col-md-6">
+                {% call info_card(url_for('directory.institution_detail', slug=institution.slug)) %}
+                <h2 class="h5 mb-1">{{ institution.name }}</h2>
+                <p class="mb-1">{% if institution.acronym %}{{ institution.acronym }} · {% endif %}{{ item.type_label }}</p>
+                <p class="mb-2">{{ item.service_count }} {{ "service" if item.service_count == 1 else "services" }} · {{ item.office_count }} {{ "office" if item.office_count == 1 else "offices" }}</p>
+                {{ status_badge(item.status, item.label) }}
+                {% if institution.is_demo %}{{ demo_badge() }}{% endif %}
+                {% endcall %}
+            </div>
+            {% endfor %}
+        </div>
+        {{ pagination(results, 'directory.institutions', filters.as_url_values()) }}
+        {% else %}
+        <div class="empty-state">
+            <p class="fw-bold mb-1">No institutions match your search.</p>
+            <p class="mb-0">Check the spelling or try a shorter name. This institution may not be in our directory yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -582,6 +582,17 @@ a.info-card:hover {
     display: none;
 }
 
+.service-links {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.office-list .service-links li {
+    padding: 0.35rem 0;
+    border: 0;
+}
+
 /* ---------- Plain text pages ---------- */
 
 .text-page {

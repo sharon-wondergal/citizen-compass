@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import status_badge, demo_badge, empty_state, section_heading %}
+{% from "macros.html" import status_badge, demo_badge, empty_state, section_heading, office_facts %}
 
 {% set service = checklist.service %}
 {% set sections = checklist.sections %}
@@ -44,7 +44,7 @@
         <header class="mb-4">
             <h1>{{ service.name }}</h1>
             <p class="lead mb-2">{{ service.summary }}</p>
-            <p class="mb-2">Responsible agency: <strong>{{ service.institution.name }}</strong></p>
+            <p class="mb-2">Responsible agency: <a href="{{ url_for('directory.institution_detail', slug=service.institution.slug) }}"><strong>{{ service.institution.name }}</strong></a></p>
             <p class="d-flex flex-wrap align-items-center gap-2 mb-2">
                 {{ status_badge(checklist.status, checklist.status_label) }}
                 {% if service.is_demo %}{{ demo_badge() }}{% endif %}
@@ -211,15 +211,7 @@
                         {% elif entry.nearness == "region" %}<span class="near-label">In your region</span>{% endif %}
                     </h3>
                     <p class="mb-2">{{ office.institution.name }}</p>
-                    <dl class="fact-list">
-                        <div><dt>Address</dt><dd>{{ office.physical_address or "Address not yet verified" }}</dd></div>
-                        <div><dt>District</dt><dd>{{ office.district.name }}</dd></div>
-                        <div><dt>Region</dt><dd>{{ office.district.region.name }}</dd></div>
-                        <div><dt>Opening hours</dt><dd>{{ office.opening_hours or "Not confirmed" }}</dd></div>
-                        {% if office.phone %}<div><dt>Telephone</dt><dd><a href="tel:{{ office.phone }}">{{ office.phone }}</a></dd></div>{% endif %}
-                        {% if office.website %}<div><dt>Website</dt><dd><a href="{{ office.website }}" target="_blank" rel="noopener noreferrer">{{ office.website }}</a></dd></div>{% endif %}
-                        {% if entry.availability_note %}<div><dt>Service note</dt><dd>{{ entry.availability_note }}</dd></div>{% endif %}
-                    </dl>
+                    {{ office_facts(office, entry.availability_note) }}
                     <p class="mb-0">Offers this service: {{ status_badge(entry.link_status, entry.link_label) }}</p>
                 </li>
                 {% endfor %}

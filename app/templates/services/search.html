@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "macros.html" import status_badge, demo_badge, empty_state, info_card %}
+{% from "macros.html" import status_badge, demo_badge, empty_state, info_card, pagination %}
 
 {% block title %}{% if filters.query %}{{ filters.query }} – {% endif %}Government services | Citizen Compass{% endblock %}
 
@@ -108,18 +108,7 @@
             {% endfor %}
         </div>
 
-        {% if results.pages > 1 %}
-        <nav class="mt-4" aria-label="Search result pages">
-            <ul class="pagination flex-wrap">
-                {% for number in range(1, results.pages + 1) %}
-                <li class="page-item {% if number == results.page %}active{% endif %}">
-                    <a class="page-link" href="{{ url_for('services.search', page=number, **filters.as_url_values()) }}"
-                       {% if number == results.page %}aria-current="page"{% endif %}>{{ number }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </nav>
-        {% endif %}
+        {{ pagination(results, 'services.search', filters.as_url_values()) }}
 
         {% else %}
         <div class="empty-state">

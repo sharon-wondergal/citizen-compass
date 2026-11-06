@@ -96,6 +96,17 @@ class SearchResults:
     pages: int
 
 
+def paginate(items, page):
+    """Return one page of a list. A page past the end shows the last page."""
+    total = len(items)
+    pages = max(math.ceil(total / RESULTS_PER_PAGE), 1)
+    page = min(page, pages)
+    start = (page - 1) * RESULTS_PER_PAGE
+    return SearchResults(
+        items=items[start:start + RESULTS_PER_PAGE], total=total, page=page, pages=pages
+    )
+
+
 # ---------- Reading the request ----------
 
 def clean_query(raw_text):
@@ -243,13 +254,7 @@ def run_search(filters):
     if filters.status:
         items = [item for item in items if item["status"] == filters.status]
 
-    total = len(items)
-    pages = max(math.ceil(total / RESULTS_PER_PAGE), 1)
-    page = min(filters.page, pages)
-    start = (page - 1) * RESULTS_PER_PAGE
-    return SearchResults(
-        items=items[start:start + RESULTS_PER_PAGE], total=total, page=page, pages=pages
-    )
+    return paginate(items, filters.page)
 
 
 # ---------- Suggestions ----------

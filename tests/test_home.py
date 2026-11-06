@@ -78,10 +78,14 @@ def test_category_cards_link_to_filtered_results(client, sample):
 
 
 def test_unbuilt_features_have_no_links(client, database):
+    assert "Report a problem</a>" not in page_text(client)
+
+
+def test_directories_are_linked_from_the_homepage(client, database):
     text = page_text(client)
-    assert "Find an office</a>" not in text
-    assert "Report a problem</a>" not in text
-    assert ">Institutions</a>" not in text
+    assert 'href="/institutions"' in text
+    assert 'href="/offices"' in text
+    assert "The office finder isn't available yet." not in text
 
 
 def test_every_link_on_the_homepage_works(client, database, sample):

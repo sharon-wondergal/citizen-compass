@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% from "macros.html" import status_badge, demo_badge, office_facts, pagination %}
+
+{% block title %}Find an office | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <h1>Find a government office</h1>
+        <p class="section-intro">Choose where you are and what you need. We show local offices before headquarters, so you don't travel further than you have to.</p>
+
+        <form action="{{ url_for('directory.offices') }}" method="get" class="filter-panel mb-3">
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label" for="office-district">District</label>
+                    <select class="form-select" id="office-district" name="district">
+                        <option value="">All districts</option>
+                        {% for item in options.districts %}
+                        <option value="{{ item.id }}" {% if item.id == filters.district %}selected{% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label" for="office-region">Region</label>
+                    <select class="form-select" id="office-region" name="region">
+                        <option value="">All regions</option>
+                        {% for item in options.regions %}
+                        <option value="{{ item.id }}" {% if item.id == filters.region %}selected{% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label" for="office-institution">Institution</label>
+                    <select class="form-select" id="office-institution" name="institution">
+                        <option value="">All institutions</option>
+                        {% for item in options.institutions %}
+                        <option value="{{ item.slug }}" {% if item.slug == filters.institution %}selected{% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label" for="office-service">Service</label>
+                    <select class="form-select" id="office-service" name="service">
+                        <option value="">All services</option>
+                        {% for item in options.services %}
+                        <option value="{{ item.slug }}" {% if item.slug == filters.service %}selected{% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="d-flex flex-wrap gap-2 mt-3">
+                <button class="btn btn-cc-primary" type="submit">Find offices</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('directory.offices') }}">Clear all</a>
+            </div>
+        </form>
+
+        {% if empty_district %}
+        <p class="section-warning status-unavailable">We haven't listed a matching office in {{ empty_district }}. {% if results.items %}These offices are elsewhere in the same region.{% endif %} That doesn't mean no office exists there, so please ask the responsible agency.</p>
+        {% endif %}
+
+        <p class="fw-bold" role="status">{{ results.total }} {{ "office" if results.total == 1 else "offices" }} found</p>
+
+        {% if results.items %}
+        <ul class="office-list">
+            {% for item in results.items %}
+            {% set office = item.office %}
+            <li {% if office.latitude is not none %}data-latitude="{{ office.latitude }}" data-longitude="{{ office.longitude }}"{% endif %}>
+                <h2 class="h5 mb-1">{{ office.name }}</h2>
+                <p class="mb-2"><a href="{{ url_for('directory.institution_detail', slug=office.institution.slug) }}">{{ office.institution.name }}</a></p>
+                <p class="d-flex flex-wrap gap-2 mb-2">
+                    {{ status_badge(item.status, item.label) }}
+                    {% if office.is_demo %}{{ demo_badge() }}{% endif %}
+                </p>
+                {{ office_facts(office) }}
+                <h3 class="h6">Services listed here</h3>
+                {% if item.services %}
+                <ul class="service-links">
+                    {% for entry in item.services %}
+                    <li>
+                        <a href="{{ url_for('services.detail', slug=entry.service.slug) }}">{{ entry.service.name }}</a>
+                        {{ status_badge(entry.status, entry.label) }}
+                        {% if entry.note %}<br><span class="section-dates">{{ entry.note }}</span>{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="mb-0">No services have been listed for this office yet.</p>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {{ pagination(results, 'directory.offices', filters.as_url_values()) }}
+        {% else %}
+        <div class="empty-state">
+            <p class="fw-bold mb-1">No offices match your choices.</p>
+            <p class="mb-0">Try a wider area or fewer filters. Our directory isn't complete, so an office may exist even if it isn't listed here.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

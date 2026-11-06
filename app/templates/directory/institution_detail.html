@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% from "macros.html" import status_badge, demo_badge, empty_state, info_card, office_facts %}
+
+{% set institution = details.institution %}
+
+{% block title %}{{ institution.name }} | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container checklist-page">
+        <p><a href="{{ url_for('directory.institutions') }}">Back to all institutions</a></p>
+
+        {% if institution.is_demo %}
+        <div class="demo-warning" role="note">
+            <strong>Demonstration only.</strong> This is a fictional institution for testing. It doesn't exist.
+        </div>
+        {% endif %}
+
+        <header class="mb-4">
+            <h1>{{ institution.name }}</h1>
+            <p class="mb-2">{% if institution.acronym %}{{ institution.acronym }} · {% endif %}{{ details.type_label }}</p>
+            <p class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                {{ status_badge(details.status, details.label) }}
+                {% if institution.is_demo %}{{ demo_badge() }}{% endif %}
+            </p>
+            <p class="section-dates mb-0">
+                {% if institution.last_verified_on %}Last checked: {{ institution.last_verified_on|long_date }}{% else %}Not yet checked{% endif %}
+                {% if institution.review_due_on %} · Next review: {{ institution.review_due_on|long_date }}{% endif %}
+            </p>
+        </header>
+
+        {% if details.status != "verified" %}
+        <p class="section-warning status-{{ details.status }}">These details haven't been confirmed as current. Check them against the institution's official channels.</p>
+        {% endif %}
+
+        <section class="checklist-section" aria-labelledby="about-heading">
+            <h2 id="about-heading">About this institution</h2>
+            {% if institution.description %}<p class="mt-2">{{ institution.description }}</p>{% endif %}
+            <dl class="fact-list mt-2">
+                {% if details.parent %}
+                <div><dt>Parent ministry</dt><dd><a href="{{ url_for('directory.institution_detail', slug=details.parent.slug) }}">{{ details.parent.name }}</a></dd></div>
+                {% endif %}
+                <div><dt>Headquarters</dt><dd>{{ institution.headquarters or "Not confirmed" }}</dd></div>
+                <div><dt>Telephone</dt><dd>{% if institution.phone %}<a href="tel:{{ institution.phone }}">{{ institution.phone }}</a>{% else %}Not confirmed{% endif %}</dd></div>
+                <div><dt>Email</dt><dd>{% if institution.email %}<a href="mailto:{{ institution.email }}">{{ institution.email }}</a>{% else %}Not confirmed{% endif %}</dd></div>
+                <div><dt>Official website</dt><dd>{% if institution.website %}<a href="{{ institution.website }}" target="_blank" rel="noopener noreferrer">{{ institution.website }}</a>{% else %}Not confirmed{% endif %}</dd></div>
+                {% if institution.source_url %}
+                <div><dt>Source of these details</dt><dd><a href="{{ institution.source_url }}" target="_blank" rel="noopener noreferrer">{{ institution.source_url }}</a></dd></div>
+                {% endif %}
+            </dl>
+            {% if details.children %}
+            <h3 class="h5 mt-3">Bodies under this institution</h3>
+            <ul class="mb-0">
+                {% for child in details.children %}
+                <li><a href="{{ url_for('directory.institution_detail', slug=child.slug) }}">{{ child.name }}</a></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </section>
+
+        <section class="checklist-section" aria-labelledby="services-heading">
+            <h2 id="services-heading">Services</h2>
+            {% if details.services %}
+            <div class="row g-3 mt-1">
+                {% for item in details.services %}
+                <div class="col-12">
+                    {% call info_card(url_for('services.detail', slug=item.service.slug)) %}
+                    <h3>{{ item.service.name }}</h3>
+                    <p class="mb-2">{{ item.service.summary }}</p>
+                    {{ status_badge(item.status, status_labels[item.status]) }}
+                    {% if item.service.is_demo %}{{ demo_badge() }}{% endif %}
+                    {% endcall %}
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="mt-2">{{ empty_state("No services have been listed for this institution yet.") }}</div>
+            {% endif %}
+        </section>
+
+        <section class="checklist-section" aria-labelledby="offices-heading">
+            <h2 id="offices-heading">Offices</h2>
+            {% if details.offices %}
+            <ul class="office-list">
+                {% for item in details.offices %}
+                <li>
+                    <h3 class="h6 mb-2">{{ item.office.name }}</h3>
+                    {{ office_facts(item.office) }}
+                    {{ status_badge(item.status, item.label) }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <div class="mt-2">{{ empty_state("No offices have been listed for this institution yet.") }}</div>
+            {% endif %}
+        </section>
+    </div>
+</section>
+{% endblock %}
