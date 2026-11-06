@@ -316,6 +316,272 @@ a.info-card:hover {
     text-align: center;
 }
 
+/* ---------- Checklist page ---------- */
+
+.checklist-page {
+    max-width: 52rem;
+}
+
+.demo-warning {
+    margin-bottom: 1.25rem;
+    padding: 0.875rem 1rem;
+    border-left: 6px solid var(--cc-navy);
+    background: var(--cc-gold-soft);
+}
+
+.checklist-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.share-message {
+    min-height: 1.5rem;
+    margin-bottom: 1rem;
+    overflow-wrap: anywhere;
+}
+
+.variant-choice {
+    margin-bottom: 1.5rem;
+}
+
+.variant-choice .nav {
+    gap: 0.5rem;
+}
+
+.variant-choice .nav-link {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    border: 1px solid var(--cc-navy);
+    color: var(--cc-navy);
+    font-weight: 600;
+}
+
+.variant-choice .nav-link.active {
+    background: var(--cc-navy);
+    color: #ffffff;
+}
+
+.checklist-section {
+    margin-bottom: 1.25rem;
+    padding: 1.1rem;
+    border: 1px solid var(--cc-border);
+    border-radius: 0.75rem;
+    background: var(--cc-surface);
+    scroll-margin-top: 1rem;
+}
+
+.section-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.section-heading h2,
+.checklist-section > h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.section-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.8rem;
+    height: 1.8rem;
+    margin-right: 0.25rem;
+    border-radius: 50%;
+    background: var(--cc-navy);
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.section-dates {
+    margin: 0.25rem 0 0.75rem;
+    color: var(--cc-muted);
+    font-size: 0.9rem;
+}
+
+.section-warning {
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.fact-list {
+    margin-bottom: 0.75rem;
+}
+
+.fact-list > div {
+    padding: 0.35rem 0;
+    border-bottom: 1px solid var(--cc-border);
+}
+
+.fact-list dt {
+    color: var(--cc-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.fact-list dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.step-list li {
+    margin-bottom: 0.6rem;
+}
+
+.step-stage {
+    color: var(--cc-muted);
+    font-size: 0.9rem;
+}
+
+.progress-panel {
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    border-radius: 0.5rem;
+    background: var(--cc-section);
+}
+
+.progress-bar {
+    width: 0;
+    background: var(--cc-navy);
+}
+
+.document-list,
+.fee-list,
+.office-list,
+.source-list {
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.document-item,
+.fee-list li,
+.office-list li {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--cc-border);
+}
+
+.document-item .form-check {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-height: 44px;
+    padding-left: 0;
+}
+
+.document-item .form-check-input {
+    flex-shrink: 0;
+    width: 1.6rem;
+    height: 1.6rem;
+    margin: 0;
+    border: 2px solid var(--cc-navy);
+}
+
+.document-item .form-check-input:checked {
+    background-color: var(--cc-navy);
+}
+
+.document-item .form-check-label {
+    font-weight: 700;
+}
+
+.document-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    margin: 0.25rem 0;
+    font-size: 0.95rem;
+}
+
+.document-details dt {
+    display: inline;
+    color: var(--cc-muted);
+    font-weight: 600;
+}
+
+.document-details dt::after {
+    content: ": ";
+}
+
+.document-details dd {
+    display: inline;
+    margin: 0;
+}
+
+.fee-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+}
+
+.fee-message {
+    margin: 0.25rem 0 0.5rem;
+    color: var(--cc-pending);
+    font-weight: 600;
+}
+
+.near-label {
+    margin-left: 0.25rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: 1rem;
+    background: var(--cc-gold-soft);
+    color: var(--cc-navy-dark);
+    font-size: 0.8rem;
+}
+
+.source-list li {
+    margin-bottom: 0.6rem;
+}
+
+.verification-table th,
+.verification-table td {
+    vertical-align: middle;
+}
+
+.verification-table .status-badge {
+    white-space: normal;
+}
+
+/* On small phones, each table row becomes a stacked block so nothing overflows. */
+@media (max-width: 575.98px) {
+    .verification-table thead {
+        display: none;
+    }
+
+    .verification-table,
+    .verification-table tbody,
+    .verification-table tr,
+    .verification-table th,
+    .verification-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .verification-table tr {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid var(--cc-border);
+    }
+
+    .verification-table th,
+    .verification-table td {
+        padding: 0.1rem 0;
+        border: 0;
+    }
+}
+
+.print-only {
+    display: none;
+}
+
 /* ---------- Plain text pages ---------- */
 
 .text-page {
@@ -368,4 +634,33 @@ a.info-card:hover {
     }
 
     body { font-size: 11pt; }
+
+    .print-only { display: block; }
+    .page-section { padding: 0; }
+    .checklist-page { max-width: none; }
+
+    .checklist-section {
+        padding: 0.5rem 0;
+        border: 0;
+        border-bottom: 1px solid #000000;
+        border-radius: 0;
+    }
+
+    /* Keep a document's details on the same page as its tick box. */
+    .document-item,
+    .office-list li,
+    .fee-list li {
+        break-inside: avoid;
+    }
+
+    .status-badge {
+        border: 1px solid #000000;
+    }
+
+    /* Paper can't be clicked, so show where each source link goes. */
+    .source-list a::after {
+        content: " (" attr(href) ")";
+        font-size: 9pt;
+        overflow-wrap: anywhere;
+    }
 }

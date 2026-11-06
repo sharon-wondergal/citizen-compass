@@ -1,8 +1,12 @@
-"""The government service directory and search."""
+"""The government service directory, search and preparation checklists."""
 
-from flask import Blueprint, jsonify, render_template, request
+from datetime import date
 
-from app.extensions import limiter
+from flask import Blueprint, abort, jsonify, render_template, request
+
+from app.extensions import db, limiter
+from app.logic.analytics import record_service_view
+from app.logic.checklist import build_checklist, choose_variant, get_service
 from app.logic.search import (
     MODE_LABELS,
     filter_options,
@@ -12,6 +16,7 @@ from app.logic.search import (
     spelling_suggestion,
     suggest_services,
 )
+from app.models import District, Region
 
 services_bp = Blueprint("services", __name__)
 
@@ -42,3 +47,34 @@ def search():
 @limiter.limit("120 per minute")
 def suggestions():
     return jsonify(suggestions=suggest_services(request.args.get("q", "")))
+
+
+@services_bp.route("/services/<slug>")
+@limiter.limit("120 per minute")
+def detail(slug):
+    service = get_service(slug)
+    if service is None:
+        abort(404)
+
+    # Unknown values in the web address simply find nothing and are ignored.
+    variant = choose_variant(service, request.args.get("variant", type=int))
+    district_id = request.args.get("district", type=int)
+    region_id = request.args.get("region", type=int)
+    district = db.session.get(District, district_id) if district_id else None
+    region = db.session.get(Region, region_id) if region_id else None
+
+    page = render_template(
+        "services/detail.html",
+        checklist=build_checklist(
+            service, variant, district=district, region_id=region.id if region else None
+        ),
+        district=district,
+        region=region,
+        districts=db.session.scalars(db.select(District).order_by(District.name)).all(),
+        regions=db.session.scalars(db.select(Region).order_by(Region.name)).all(),
+        today=date.today(),
+    )
+
+    # Counted after the page is built, because saving refreshes the loaded data.
+    record_service_view(service.id)
+    return page

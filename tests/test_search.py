@@ -21,6 +21,7 @@ from app.models import (
     GovernmentInstitution,
     GovernmentOffice,
     GovernmentService,
+    OfficialSource,
     Region,
     SearchLog,
     ServiceCategory,
@@ -165,6 +166,7 @@ def test_filter_by_verification_status(client, demo):
 
 
 def test_expired_service_is_found_under_outdated(client, sample):
+    sample.service.is_demo = False
     create_verification_records(sample.service)
     for record in sample.service.verification_records:
         record.status = "verified"
@@ -404,11 +406,13 @@ def test_every_demo_record_is_marked_and_named(demo):
         assert office.is_demo is True
 
 
-def test_demo_services_claim_no_facts(demo):
+def test_demo_services_contain_no_invented_numbers(demo):
     for service in db.session.query(GovernmentService):
-        assert service.fees == []
-        assert service.documents == []
-        assert service.processing == []
+        assert all(fee.amount_ugx is None for fee in service.fees)
+        for item in service.processing:
+            assert item.min_working_days is None
+            assert item.max_working_days is None
+            assert item.basis == "unverified"
         assert len(service.verification_records) == 5
         assert {record.status for record in service.verification_records} == {"pending"}
 
@@ -417,7 +421,8 @@ def test_removing_demo_data_leaves_nothing_behind(database):
     seed_demo_data()
     assert remove_demo_data() == len(DEMO_SERVICES)
 
-    for model in (GovernmentService, GovernmentInstitution, GovernmentOffice, District, Region):
+    for model in (GovernmentService, GovernmentInstitution, GovernmentOffice, OfficialSource,
+                  District, Region):
         assert db.session.query(model).count() == 0
     assert db.session.query(ServiceCategory).count() == 14
 

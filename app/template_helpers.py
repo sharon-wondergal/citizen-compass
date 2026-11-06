@@ -16,7 +16,20 @@ def route_exists(endpoint):
     return endpoint in current_app.view_functions
 
 
+def long_date(value):
+    """Format a date as 6 November 2026."""
+    return f"{value.day} {value.strftime('%B %Y')}"
+
+
+def ugx(amount):
+    """Format whole shillings. A confirmed 0 means the service is free."""
+    return "Free" if amount == 0 else f"UGX {amount:,}"
+
+
 def register_template_helpers(app):
+    app.add_template_filter(long_date)
+    app.add_template_filter(ugx)
+
     @app.context_processor
     def template_values():
         return {

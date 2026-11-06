@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+{% from "macros.html" import status_badge, demo_badge, empty_state, section_heading %}
+
+{% set service = checklist.service %}
+{% set sections = checklist.sections %}
+
+{% block title %}{{ service.name }} checklist | Citizen Compass{% endblock %}
+{% block description %}{{ service.summary }}{% endblock %}
+
+{% macro document_item(document) %}
+<li class="document-item">
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="document-{{ document.id }}"
+               data-document-id="{{ document.id }}" {% if document.is_mandatory %}data-required{% endif %}>
+        <label class="form-check-label" for="document-{{ document.id }}">{{ document.name }}</label>
+    </div>
+    <dl class="document-details">
+        <div><dt>Original</dt><dd>{{ document.original }}</dd></div>
+        <div><dt>Photocopies</dt><dd>{{ document.photocopies }}</dd></div>
+        <div><dt>Certified copy</dt><dd>{{ document.certified_copy }}</dd></div>
+        {% if document.max_age_days %}
+        <div><dt>Must be issued within</dt><dd>{{ document.max_age_days }} days</dd></div>
+        {% endif %}
+    </dl>
+    {% if document.instructions %}<p class="mb-0">{{ document.instructions }}</p>{% endif %}
+</li>
+{% endmacro %}
+
+{% block content %}
+<article class="page-section" data-checklist="cc-checklist-{{ service.id }}-{{ checklist.variant.id if checklist.variant else 0 }}">
+    <div class="container checklist-page">
+        <p class="no-print"><a href="{{ url_for('services.search') }}">Back to all services</a></p>
+
+        <p class="print-only">
+            Printed from Citizen Compass on {{ today|long_date }}. Citizen Compass is an independent project, not a government website, and this isn't an official document. Details can change, so confirm them with the responsible agency.
+        </p>
+
+        {% if service.is_demo %}
+        <div class="demo-warning" role="note">
+            <strong>Demonstration only.</strong> This is a fictional service for testing. It isn't a real government requirement, so don't rely on it.
+        </div>
+        {% endif %}
+
+        <header class="mb-4">
+            <h1>{{ service.name }}</h1>
+            <p class="lead mb-2">{{ service.summary }}</p>
+            <p class="mb-2">Responsible agency: <strong>{{ service.institution.name }}</strong></p>
+            <p class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                {{ status_badge(checklist.status, checklist.status_label) }}
+                {% if service.is_demo %}{{ demo_badge() }}{% endif %}
+            </p>
+            <p class="section-dates mb-0">
+                {% if checklist.last_checked_on %}Oldest section check: {{ checklist.last_checked_on|long_date }}{% else %}Not every section has been checked yet.{% endif %}
+            </p>
+        </header>
+
+        <div class="checklist-actions no-print">
+            <button class="btn btn-cc-primary" type="button" data-print-button hidden>
+                <i class="bi bi-printer" aria-hidden="true"></i> Print or save as PDF
+            </button>
+            <button class="btn btn-outline-secondary" type="button" data-share-button hidden>
+                <i class="bi bi-share" aria-hidden="true"></i> Share this checklist
+            </button>
+            {% if service.institution.website %}
+            <a class="btn btn-outline-secondary" href="{{ service.institution.website }}" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Agency website
+            </a>
+            {% endif %}
+            {% if route_exists('reports.new') %}
+            <a class="btn btn-outline-secondary" href="{{ url_for('reports.new', service=service.slug) }}">
+                <i class="bi bi-flag" aria-hidden="true"></i> Report incorrect information
+            </a>
+            {% endif %}
+        </div>
+        <p class="share-message no-print" data-share-message role="status"></p>
+
+        {% if checklist.variants %}
+        <nav class="variant-choice no-print" aria-label="Your situation">
+            <h2 class="h5">Which situation applies to you?</h2>
+            <ul class="nav nav-pills">
+                {% for variant in checklist.variants %}
+                <li class="nav-item">
+                    <a class="nav-link {% if checklist.variant and variant.id == checklist.variant.id %}active{% endif %}"
+                       {% if checklist.variant and variant.id == checklist.variant.id %}aria-current="true"{% endif %}
+                       href="{{ url_for('services.detail', slug=service.slug, variant=variant.id) }}">{{ variant.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% if checklist.variant %}<p class="print-only">Situation: {{ checklist.variant.name }}</p>{% endif %}
+        {% endif %}
+
+        <section class="checklist-section" aria-labelledby="section-overview">
+            <div id="section-overview">{{ section_heading(1, "Service information", sections.overview) }}</div>
+            {% if service.description %}<p>{{ service.description }}</p>{% endif %}
+            <dl class="fact-list">
+                <div><dt>Category</dt><dd>{{ service.category.name }}</dd></div>
+                <div><dt>Who qualifies</dt><dd>{{ service.eligibility or "Not confirmed" }}</dd></div>
+                <div><dt>How it's provided</dt><dd>{{ checklist.delivery_mode }}</dd></div>
+                {% if service.online_url %}
+                <div><dt>Official portal</dt><dd><a href="{{ service.online_url }}" target="_blank" rel="noopener noreferrer">{{ service.online_url }}</a></dd></div>
+                {% endif %}
+            </dl>
+
+            {% if checklist.steps %}
+            <h3 class="h5 mt-4">What to do, in order</h3>
+            <ol class="step-list">
+                {% for step in checklist.steps %}
+                <li>
+                    <strong>{{ step.title }}</strong> <span class="step-stage">{{ step.stage }}</span>
+                    {% if step.instructions %}<br>{{ step.instructions }}{% endif %}
+                    {% if step.action_url %}<br><a href="{{ step.action_url }}" target="_blank" rel="noopener noreferrer">Open the official page</a>{% endif %}
+                </li>
+                {% endfor %}
+            </ol>
+            {% endif %}
+        </section>
+
+        <section class="checklist-section" aria-labelledby="section-documents">
+            <div id="section-documents">{{ section_heading(2, "Required documents", sections.documents) }}</div>
+
+            {% if checklist.documents %}
+            <div class="progress-panel no-print" data-progress hidden>
+                <p class="mb-1 fw-bold" data-progress-text role="status"></p>
+                <div class="progress" aria-hidden="true"><div class="progress-bar" data-progress-bar></div></div>
+                <button class="btn btn-link btn-sm px-0" type="button" data-reset-button>Clear my ticks</button>
+                <p class="section-dates mb-0">Your ticks stay on this device and aren't sent to us.</p>
+            </div>
+
+            {% if checklist.required_documents %}
+            <h3 class="h5">You must bring</h3>
+            <ul class="document-list">
+                {% for document in checklist.required_documents %}{{ document_item(document) }}{% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if checklist.optional_documents %}
+            <h3 class="h5">You may also need</h3>
+            <ul class="document-list">
+                {% for document in checklist.optional_documents %}{{ document_item(document) }}{% endfor %}
+            </ul>
+            {% endif %}
+            {% else %}
+            {{ empty_state("No document list has been added yet. Please ask the responsible agency.") }}
+            {% endif %}
+        </section>
+
+        <section class="checklist-section" aria-labelledby="section-fees">
+            <div id="section-fees">{{ section_heading(3, "Official service fees", sections.fees) }}</div>
+
+            {% if checklist.fees %}
+            <ul class="fee-list">
+                {% for fee in checklist.fees %}
+                <li>
+                    <div class="fee-row">
+                        <span>{{ fee.name }}{% if fee.speed %} ({{ fee.speed }}){% endif %}{% if fee.kind == "other_charge" %} · Other charge{% endif %}{% if not fee.is_mandatory %} · Optional{% endif %}</span>
+                        {% if fee.amount_ugx is not none %}<strong>{{ fee.amount_ugx|ugx }}</strong>{% endif %}
+                    </div>
+                    {% if fee.message %}<p class="fee-message">{{ fee.message }}</p>{% endif %}
+                    {% if fee.payment_method %}<p class="mb-1">Payment method: {{ fee.payment_method }}</p>{% endif %}
+                    {% if fee.payment_instructions %}<p class="mb-1">{{ fee.payment_instructions }}</p>{% endif %}
+                    {% if fee.effective_from %}<p class="section-dates mb-0">Applies from {{ fee.effective_from|long_date }}</p>{% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="fee-message">{{ checklist.fee_message }}</p>
+            {% endif %}
+            <p class="section-dates mb-0">Pay only through official channels, and keep your receipt.</p>
+        </section>
+
+        <section class="checklist-section" id="offices" aria-labelledby="section-offices">
+            <div id="section-offices">{{ section_heading(4, "Government office locations", sections.offices) }}</div>
+
+            {% if checklist.offices %}
+            <form class="row g-2 align-items-end mb-3 no-print" action="{{ url_for('services.detail', slug=service.slug) }}#offices" method="get">
+                {% if checklist.variant %}<input type="hidden" name="variant" value="{{ checklist.variant.id }}">{% endif %}
+                <div class="col-sm-5">
+                    <label class="form-label fw-bold" for="office-district">Your district</label>
+                    <select class="form-select" id="office-district" name="district">
+                        <option value="">Choose a district</option>
+                        {% for item in districts %}
+                        <option value="{{ item.id }}" {% if district and item.id == district.id %}selected{% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label class="form-label fw-bold" for="office-region">Or your region</label>
+                    <select class="form-select" id="office-region" name="region">
+                        <option value="">Choose a region</option>
+                        {% for item in regions %}
+                        <option value="{{ item.id }}" {% if region and item.id == region.id %}selected{% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-3">
+                    <button class="btn btn-cc-primary w-100" type="submit">Show nearest</button>
+                </div>
+            </form>
+
+            {% if checklist.no_nearby_office %}
+            <p class="section-warning status-unavailable">We haven't listed an office for this service near the place you chose. These are the other offices we know about.{% if service.online_url %} You may also be able to use the official portal.{% endif %}</p>
+            {% endif %}
+
+            <ul class="office-list">
+                {% for entry in checklist.offices %}
+                {% set office = entry.office %}
+                <li>
+                    <h3 class="h6 mb-1">{{ office.name }}
+                        {% if entry.nearness == "district" %}<span class="near-label">In your district</span>
+                        {% elif entry.nearness == "region" %}<span class="near-label">In your region</span>{% endif %}
+                    </h3>
+                    <p class="mb-2">{{ office.institution.name }}</p>
+                    <dl class="fact-list">
+                        <div><dt>Address</dt><dd>{{ office.physical_address or "Address not yet verified" }}</dd></div>
+                        <div><dt>District</dt><dd>{{ office.district.name }}</dd></div>
+                        <div><dt>Region</dt><dd>{{ office.district.region.name }}</dd></div>
+                        <div><dt>Opening hours</dt><dd>{{ office.opening_hours or "Not confirmed" }}</dd></div>
+                        {% if office.phone %}<div><dt>Telephone</dt><dd><a href="tel:{{ office.phone }}">{{ office.phone }}</a></dd></div>{% endif %}
+                        {% if office.website %}<div><dt>Website</dt><dd><a href="{{ office.website }}" target="_blank" rel="noopener noreferrer">{{ office.website }}</a></dd></div>{% endif %}
+                        {% if entry.availability_note %}<div><dt>Service note</dt><dd>{{ entry.availability_note }}</dd></div>{% endif %}
+                    </dl>
+                    <p class="mb-0">Offers this service: {{ status_badge(entry.link_status, entry.link_label) }}</p>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            {{ empty_state("No offices have been listed for this service yet.") }}
+            {% endif %}
+        </section>
+
+        <section class="checklist-section" aria-labelledby="section-processing">
+            <div id="section-processing">{{ section_heading(5, "Processing time", sections.processing) }}</div>
+
+            {% if checklist.processing %}
+            <ul class="office-list">
+                {% for item in checklist.processing %}
+                <li>
+                    <dl class="fact-list">
+                        {% if item.speed %}<div><dt>Service speed</dt><dd>{{ item.speed }}</dd></div>{% endif %}
+                        <div><dt>Expected time</dt><dd>{{ item.duration }}</dd></div>
+                        {% if item.duration_note %}<div><dt>Note</dt><dd>{{ item.duration_note }}</dd></div>{% endif %}
+                        <div><dt>When it starts</dt><dd>{{ item.starts_after }}</dd></div>
+                        <div><dt>Type of estimate</dt><dd>{{ item.basis }}</dd></div>
+                        {% if item.delay_factors %}<div><dt>Possible delays</dt><dd>{{ item.delay_factors }}</dd></div>{% endif %}
+                    </dl>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            {{ empty_state("No processing time has been added yet. Please ask the responsible agency.") }}
+            {% endif %}
+        </section>
+
+        <section class="checklist-section" aria-labelledby="section-sources">
+            <h2 id="section-sources"><span class="section-number">6</span> Official sources and verification</h2>
+            <table class="table verification-table">
+                <caption class="visually-hidden">Verification status of each section</caption>
+                <thead>
+                    <tr><th scope="col">Section</th><th scope="col">Status</th><th scope="col">Last checked</th></tr>
+                </thead>
+                <tbody>
+                    {% for key, title in [("overview", "Service information"), ("documents", "Documents"), ("fees", "Fees"), ("offices", "Offices"), ("processing", "Processing time")] %}
+                    <tr>
+                        <th scope="row">{{ title }}</th>
+                        <td>{{ status_badge(sections[key].status, sections[key].label) }}</td>
+                        <td>{{ sections[key].last_checked_on|long_date if sections[key].last_checked_on else "Not yet checked" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% if checklist.sources %}
+            <h3 class="h5">Sources used</h3>
+            <ul class="source-list">
+                {% for source in checklist.sources %}
+                <li>
+                    <a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.title }}</a><br>
+                    <span class="section-dates">{{ source.institution.name }}{% if source.last_checked_on %} · Checked {{ source.last_checked_on|long_date }}{% endif %}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            {{ empty_state("No official sources have been added yet.") }}
+            {% endif %}
+        </section>
+    </div>
+</article>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/checklist.js') }}" defer></script>
+{% endblock %}

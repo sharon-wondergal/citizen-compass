@@ -8,7 +8,7 @@ Citizen Compass is a government service preparation platform. It helps citizens 
 
 ## Project status
 
-Under development, stage by stage. The homepage and service search work. Service checklist pages aren't built yet, and the only services so far are fictional demonstration records.
+Under development, stage by stage. The homepage, service search and preparation checklists work. The only services so far are fictional demonstration records.
 
 | Stage | Topic | Status |
 |---|---|---|
@@ -19,7 +19,8 @@ Under development, stage by stage. The homepage and service search work. Service
 | 5 | Database models and relationships | Done |
 | 6 | Homepage and navigation | Done |
 | 7 | Service directory and search | Done |
-| 8 | Service preparation checklist | Next |
+| 8 | Service preparation checklist | Done |
+| 9 | Institution and office directories | Next |
 
 ## Requirements
 

@@ -30,13 +30,21 @@ def effective_status(stored_status, review_due_on, today=None):
     return stored_status
 
 
-def overall_status(service, today=None):
-    """Return the weakest status across all sections of a service.
+def section_statuses(service, today=None):
+    """Return the status citizens should see for each section.
 
     A section with no record counts as pending, so missing information can
-    never make a service look verified.
+    never look verified. A demonstration service can never count as verified.
     """
     statuses = {section: "pending" for section in VERIFICATION_SECTIONS}
     for record in service.verification_records:
-        statuses[record.section] = effective_status(record.status, record.review_due_on, today)
-    return min(statuses.values(), key=STATUS_RANK.index)
+        stored = record.status
+        if service.is_demo and stored == "verified":
+            stored = "pending"
+        statuses[record.section] = effective_status(stored, record.review_due_on, today)
+    return statuses
+
+
+def overall_status(service, today=None):
+    """Return the weakest status across all sections of a service."""
+    return min(section_statuses(service, today).values(), key=STATUS_RANK.index)

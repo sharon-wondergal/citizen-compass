@@ -13,6 +13,7 @@ TOMORROW = TODAY + timedelta(days=1)
 
 def records(service, **statuses):
     """Build one in-memory record per section, verified unless stated."""
+    service.is_demo = False
     service.verification_records = [
         VerificationRecord(
             section=section,
@@ -54,6 +55,12 @@ def test_missing_section_stops_a_service_being_verified(sample):
 def test_all_sections_verified_makes_the_service_verified(sample):
     records(sample.service)
     assert overall_status(sample.service, TODAY) == "verified"
+
+
+def test_demo_service_can_never_count_as_verified(sample):
+    records(sample.service)
+    sample.service.is_demo = True
+    assert overall_status(sample.service, TODAY) == "pending"
 
 
 def test_one_pending_section_makes_the_service_pending(sample):

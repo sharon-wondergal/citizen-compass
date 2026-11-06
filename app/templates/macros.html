@@ -19,6 +19,25 @@
 <p class="empty-state mb-0">{{ message }}</p>
 {% endmacro %}
 
+{# The heading of a checklist section, with its status and dates. #}
+{% macro section_heading(number, title, info) %}
+<div class="section-heading">
+    <h2><span class="section-number">{{ number }}</span> {{ title }}</h2>
+    {{ status_badge(info.status, info.label) }}
+</div>
+<p class="section-dates">
+    {% if info.last_checked_on %}Last checked: {{ info.last_checked_on|long_date }}{% else %}Not yet checked{% endif %}
+    {% if info.review_due_on %} · Next review: {{ info.review_due_on|long_date }}{% endif %}
+</p>
+{% if info.status == "pending" %}
+<p class="section-warning status-pending">This section hasn't been verified yet. Confirm it with the responsible agency before you rely on it.</p>
+{% elif info.status == "outdated" %}
+<p class="section-warning status-outdated">This section is past its review date and may have changed. Confirm it with the responsible agency.</p>
+{% elif info.status == "unavailable" %}
+<p class="section-warning status-unavailable">We couldn't find official information for this section. Please ask the responsible agency.</p>
+{% endif %}
+{% endmacro %}
+
 {# A card that is a link only when there is a real page to link to. #}
 {% macro info_card(href=none) %}
 {% if href %}
