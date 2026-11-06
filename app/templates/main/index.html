@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Citizen Compass</title>
+</head>
+<body>
+    <h1>Citizen Compass is running</h1>
+    <p>Know Before You Go.</p>
+    <ul>
+        <li>Database connection: {{ "OK" if database.connected else "Not working" }}</li>
+        <li>Foreign key checks: {{ "On" if database.foreign_keys else "Off" }}</li>
+    </ul>
+    <p>This is a temporary setup page. The real homepage arrives in Stage 6.</p>
+</body>
+</html>

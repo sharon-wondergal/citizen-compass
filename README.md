@@ -8,14 +8,15 @@ Citizen Compass is a government service preparation platform. It helps citizens 
 
 ## Project status
 
-Under development, stage by stage. The web application itself doesn't run yet.
+Under development, stage by stage. The application starts and shows a temporary setup page.
 
 | Stage | Topic | Status |
 |---|---|---|
 | 1 | Requirements and architecture | Done |
 | 2 | Database design and ERD | Done: see [docs/database-design.md](docs/database-design.md) |
 | 3 | PyCharm project and virtual environment | Done |
-| 4 | Flask configuration | Next |
+| 4 | Flask configuration | Done |
+| 5 | Database models and relationships | Next |
 
 ## Requirements
 
@@ -56,6 +57,20 @@ Run these commands in the PyCharm Terminal, from the project folder.
    ```bash
    python -c "import secrets; print(secrets.token_hex(32))"
    ```
+
+## Run the application
+
+```bash
+flask run
+```
+
+Then open <http://127.0.0.1:5000> in your browser. Press Ctrl+C in the terminal to stop it.
+
+## Run the tests
+
+```bash
+python -m pytest
+```
 
 ## Check the setup
 
