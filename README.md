@@ -8,7 +8,7 @@ Citizen Compass is a government service preparation platform. It helps citizens 
 
 ## Project status
 
-Under development, stage by stage. The homepage works, but search and the service directory aren't built yet.
+Under development, stage by stage. The homepage and service search work. Service checklist pages aren't built yet, and the only services so far are fictional demonstration records.
 
 | Stage | Topic | Status |
 |---|---|---|
@@ -18,7 +18,8 @@ Under development, stage by stage. The homepage works, but search and the servic
 | 4 | Flask configuration | Done |
 | 5 | Database models and relationships | Done |
 | 6 | Homepage and navigation | Done |
-| 7 | Service directory and search | Next |
+| 7 | Service directory and search | Done |
+| 8 | Service preparation checklist | Next |
 
 ## Requirements
 
@@ -71,6 +72,14 @@ Run these commands in the PyCharm Terminal, from the project folder.
    ```bash
    flask seed categories
    ```
+
+8. Optional: add fictional demonstration records for testing:
+
+   ```bash
+   flask seed demo
+   ```
+
+   Remove them at any time with `flask seed remove-demo`. They aren't real government information.
 
 ## Run the application
 

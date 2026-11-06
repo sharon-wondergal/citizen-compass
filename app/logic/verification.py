@@ -2,6 +2,7 @@
 
 from datetime import date
 
+from app.models import VerificationRecord
 from app.models.base import VERIFICATION_SECTIONS
 
 STATUS_LABELS = {
@@ -13,6 +14,12 @@ STATUS_LABELS = {
 
 # Worst first. A service shows its weakest section.
 STATUS_RANK = ("unavailable", "outdated", "pending", "verified")
+
+
+def create_verification_records(service):
+    """Give a new service one pending record for each section."""
+    for section in VERIFICATION_SECTIONS:
+        service.verification_records.append(VerificationRecord(section=section))
 
 
 def effective_status(stored_status, review_due_on, today=None):

@@ -185,16 +185,6 @@ summary:focus-visible {
     font-size: 1.0625rem;
 }
 
-.search-panel .form-control:disabled {
-    background: var(--cc-section);
-}
-
-.search-note {
-    margin: 0.5rem 0 0;
-    color: var(--cc-muted);
-    font-size: 0.9rem;
-}
-
 /* ---------- Page sections ---------- */
 
 .page-section {
@@ -286,6 +276,45 @@ a.info-card:hover {
 .status-outdated { background: var(--cc-outdated-bg); color: var(--cc-outdated); }
 .status-unavailable { background: var(--cc-unavailable-bg); color: var(--cc-unavailable); }
 .status-demo { background: var(--cc-navy); color: #ffffff; }
+
+/* ---------- Search page ---------- */
+
+.form-control,
+.form-select {
+    min-height: 48px;
+    border-color: #8b97a5;
+}
+
+.filter-panel {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--cc-border);
+    border-radius: 0.75rem;
+    background: var(--cc-section);
+}
+
+.filter-panel summary {
+    min-height: 32px;
+    color: var(--cc-navy);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.filter-panel label {
+    font-weight: 600;
+}
+
+.pagination {
+    --bs-pagination-color: var(--cc-navy);
+    --bs-pagination-active-bg: var(--cc-navy);
+    --bs-pagination-active-border-color: var(--cc-navy);
+}
+
+.page-link {
+    min-width: 44px;
+    min-height: 44px;
+    padding-top: 0.6rem;
+    text-align: center;
+}
 
 /* ---------- Plain text pages ---------- */
 

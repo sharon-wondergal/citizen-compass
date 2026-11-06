@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% from "macros.html" import status_badge, demo_badge, empty_state, info_card %}
+
+{% block title %}{% if filters.query %}{{ filters.query }} – {% endif %}Government services | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <h1>Government services</h1>
+        <p class="section-intro">Search by service, ministry, agency or everyday words.</p>
+
+        <form action="{{ url_for('services.search') }}" method="get" role="search" class="mb-3">
+            <label class="form-label fw-bold" for="service-search">Search for a government service</label>
+            <div class="d-flex flex-column flex-sm-row gap-2 mb-3">
+                <input class="form-control" id="service-search" name="q" type="search" maxlength="100"
+                       value="{{ filters.query }}" list="service-suggestions" autocomplete="off"
+                       data-suggest-url="{{ url_for('services.suggestions') }}">
+                <datalist id="service-suggestions"></datalist>
+                <button class="btn btn-cc-primary px-4" type="submit">
+                    <i class="bi bi-search" aria-hidden="true"></i> Search
+                </button>
+            </div>
+
+            <details class="filter-panel" {% if filters.has_filters %}open{% endif %}>
+                <summary>Filter results</summary>
+                <div class="row g-3 mt-1">
+                    <div class="col-md-6 col-lg-4">
+                        <label class="form-label" for="filter-category">Category</label>
+                        <select class="form-select" id="filter-category" name="category">
+                            <option value="">All categories</option>
+                            {% for category in options.categories %}
+                            <option value="{{ category.slug }}" {% if category.slug == filters.category %}selected{% endif %}>{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <label class="form-label" for="filter-institution">Institution</label>
+                        <select class="form-select" id="filter-institution" name="institution">
+                            <option value="">All institutions</option>
+                            {% for institution in options.institutions %}
+                            <option value="{{ institution.slug }}" {% if institution.slug == filters.institution %}selected{% endif %}>{{ institution.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <label class="form-label" for="filter-region">Region</label>
+                        <select class="form-select" id="filter-region" name="region">
+                            <option value="">All regions</option>
+                            {% for region in options.regions %}
+                            <option value="{{ region.id }}" {% if region.id == filters.region %}selected{% endif %}>{{ region.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <label class="form-label" for="filter-district">District</label>
+                        <select class="form-select" id="filter-district" name="district">
+                            <option value="">All districts</option>
+                            {% for district in options.districts %}
+                            <option value="{{ district.id }}" {% if district.id == filters.district %}selected{% endif %}>{{ district.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <label class="form-label" for="filter-mode">How the service is provided</label>
+                        <select class="form-select" id="filter-mode" name="mode">
+                            <option value="">Any</option>
+                            {% for value, label in options.modes.items() %}
+                            <option value="{{ value }}" {% if value == filters.mode %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6 col-lg-4">
+                        <label class="form-label" for="filter-status">Verification status</label>
+                        <select class="form-select" id="filter-status" name="status">
+                            <option value="">Any</option>
+                            {% for value, label in options.statuses.items() %}
+                            <option value="{{ value }}" {% if value == filters.status %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <button class="btn btn-cc-primary" type="submit">Apply filters</button>
+                    <a class="btn btn-outline-secondary" href="{{ url_for('services.search') }}">Clear all</a>
+                </div>
+            </details>
+        </form>
+
+        <p class="fw-bold" role="status">
+            {{ results.total }} {{ "service" if results.total == 1 else "services" }} found{% if filters.query %} for “{{ filters.query }}”{% endif %}
+        </p>
+
+        {% if results.items %}
+        <div class="row g-3">
+            {% for item in results.items %}
+            {% set service = item.service %}
+            <div class="col-12">
+                {% set href = url_for('services.detail', slug=service.slug) if route_exists('services.detail') else none %}
+                {% call info_card(href) %}
+                <h2 class="h5 mb-1">{{ service.name }}</h2>
+                <p class="mb-1">{{ service.institution.name }} · {{ service.category.name }}</p>
+                <p class="mb-2">{{ service.summary }}</p>
+                <p class="mb-2">How it's provided: {{ mode_labels.get(service.delivery_mode, "Not confirmed") }}</p>
+                {{ status_badge(item.status, status_labels[item.status]) }}
+                {% if service.is_demo %}{{ demo_badge() }}{% endif %}
+                {% endcall %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if results.pages > 1 %}
+        <nav class="mt-4" aria-label="Search result pages">
+            <ul class="pagination flex-wrap">
+                {% for number in range(1, results.pages + 1) %}
+                <li class="page-item {% if number == results.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('services.search', page=number, **filters.as_url_values()) }}"
+                       {% if number == results.page %}aria-current="page"{% endif %}>{{ number }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+            {% if suggestion %}
+            <p class="mb-2">Did you mean <a href="{{ url_for('services.search', q=suggestion) }}">{{ suggestion }}</a>?</p>
+            {% endif %}
+            <p class="fw-bold mb-1">No services match your search.</p>
+            <ul class="mb-0">
+                <li>Check the spelling.</li>
+                <li>Use fewer or more general words, such as “passport”.</li>
+                {% if filters.has_filters %}
+                <li>Remove some filters, or <a href="{{ url_for('services.search', q=filters.query or none) }}">clear all filters</a>.</li>
+                {% endif %}
+                <li>This service may not be in our directory yet. That doesn't mean it isn't available.</li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/search-suggestions.js') }}" defer></script>
+{% endblock %}

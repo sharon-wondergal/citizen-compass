@@ -66,20 +66,15 @@ def test_contact_email_appears_when_set(app, client, database):
 
 # ---------- No fake buttons ----------
 
-def test_search_is_disabled_until_the_feature_exists(client, database):
-    text = page_text(client)
-    assert "Search isn't available yet" in text
-    assert "<form" not in text
-    assert 'name="q"' not in text
-
-
-def test_search_turns_on_when_the_route_exists(app, client, database):
-    app.add_url_rule("/services", endpoint="services.search", view_func=lambda: "ok")
+def test_homepage_search_goes_to_the_directory(client, database):
     text = page_text(client)
     assert '<form action="/services"' in text
     assert 'name="q"' in text
     assert ">Services</a>" in text
-    assert "Search isn't available yet" not in text
+
+
+def test_category_cards_link_to_filtered_results(client, sample):
+    assert 'href="/services?category=example-category"' in page_text(client)
 
 
 def test_unbuilt_features_have_no_links(client, database):

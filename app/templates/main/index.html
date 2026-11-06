@@ -11,26 +11,18 @@
         <p class="hero-question">Do I have everything I need, how much will it cost, and where should I go?</p>
 
         <div class="search-panel">
-            {% if route_exists('services.search') %}
             <form action="{{ url_for('services.search') }}" method="get" role="search">
                 <label class="form-label" for="home-search">Search for a government service</label>
                 <div class="d-flex flex-column flex-sm-row gap-2">
-                    <input class="form-control" id="home-search" name="q" type="search" maxlength="100" placeholder="For example: passport">
+                    <input class="form-control" id="home-search" name="q" type="search" maxlength="100"
+                           placeholder="For example: passport" list="service-suggestions" autocomplete="off"
+                           data-suggest-url="{{ url_for('services.suggestions') }}">
+                    <datalist id="service-suggestions"></datalist>
                     <button class="btn btn-cc-primary px-4" type="submit">
                         <i class="bi bi-search" aria-hidden="true"></i> Search
                     </button>
                 </div>
             </form>
-            {% else %}
-            <label class="form-label" for="home-search">Search for a government service</label>
-            <div class="d-flex flex-column flex-sm-row gap-2">
-                <input class="form-control" id="home-search" type="search" disabled aria-describedby="search-note">
-                <button class="btn btn-cc-primary px-4" type="button" disabled>
-                    <i class="bi bi-search" aria-hidden="true"></i> Search
-                </button>
-            </div>
-            <p class="search-note" id="search-note">Search isn't available yet. It's being built.</p>
-            {% endif %}
         </div>
     </div>
 </section>
@@ -197,4 +189,8 @@
         {% endif %}
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/search-suggestions.js') }}" defer></script>
 {% endblock %}

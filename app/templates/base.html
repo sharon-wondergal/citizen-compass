@@ -34,10 +34,8 @@
                 <div class="collapse navbar-collapse" id="main-menu">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Home</a></li>
-                        {# Each link appears once its feature exists, so nothing leads nowhere. #}
-                        {% if route_exists('services.search') %}
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('services.search') }}">Services</a></li>
-                        {% endif %}
+                        {# Each link appears once its feature exists, so nothing leads nowhere. #}
                         {% if route_exists('directory.institutions') %}
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('directory.institutions') }}">Institutions</a></li>
                         {% endif %}
@@ -95,5 +93,6 @@
             </p>
         </div>
     </footer>
+    {% block scripts %}{% endblock %}
 </body>
 </html>
