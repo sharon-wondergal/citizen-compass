@@ -8,7 +8,7 @@ Citizen Compass is a government service preparation platform. It helps citizens 
 
 ## Project status
 
-Under development, stage by stage. The application starts and shows a temporary setup page.
+Under development, stage by stage. The homepage works, but search and the service directory aren't built yet.
 
 | Stage | Topic | Status |
 |---|---|---|
@@ -17,7 +17,8 @@ Under development, stage by stage. The application starts and shows a temporary 
 | 3 | PyCharm project and virtual environment | Done |
 | 4 | Flask configuration | Done |
 | 5 | Database models and relationships | Done |
-| 6 | Homepage and navigation | Next |
+| 6 | Homepage and navigation | Done |
+| 7 | Service directory and search | Next |
 
 ## Requirements
 
@@ -63,6 +64,12 @@ Run these commands in the PyCharm Terminal, from the project folder.
 
    ```bash
    flask db upgrade
+   ```
+
+7. Add the standard service categories:
+
+   ```bash
+   flask seed categories
    ```
 
 ## Run the application

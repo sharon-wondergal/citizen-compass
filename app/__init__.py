@@ -8,8 +8,11 @@ from flask import Flask
 
 from app import models  # noqa: F401 - loading the models registers the tables
 from app.blueprints.main import main_bp
+from app.cli import register_commands
 from app.config import get_config, validate_config
+from app.errors import register_error_handlers
 from app.extensions import csrf, db, limiter, migrate
+from app.template_helpers import register_template_helpers
 
 
 def create_app(config_name=None):
@@ -21,6 +24,9 @@ def create_app(config_name=None):
 
     register_extensions(app)
     register_blueprints(app)
+    register_error_handlers(app)
+    register_template_helpers(app)
+    register_commands(app)
 
     return app
 

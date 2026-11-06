@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Citizen Compass{% endblock %}</title>
+    <meta name="description" content="{% block description %}Check the documents, fees, offices and processing time for a government service in Uganda before you travel.{% endblock %}">
+    <link rel="icon" href="{{ url_for('static', filename='img/logo.svg') }}" type="image/svg+xml">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    {# Without JavaScript, the menu stays open so every link is still reachable. #}
+    <noscript><style>.navbar-collapse { display: block !important; } .navbar-toggler { display: none; }</style></noscript>
+    <script src="{{ url_for('static', filename='vendor/bootstrap/bootstrap.bundle.min.js') }}" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <div class="independence-notice">
+        Independent project. This is not a government website.
+    </div>
+
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg" aria-label="Main">
+            <div class="container">
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="" width="42" height="42">
+                    <span>Citizen Compass<small>Uganda</small></span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-menu"
+                        aria-controls="main-menu" aria-expanded="false" aria-label="Open menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Home</a></li>
+                        {# Each link appears once its feature exists, so nothing leads nowhere. #}
+                        {% if route_exists('services.search') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('services.search') }}">Services</a></li>
+                        {% endif %}
+                        {% if route_exists('directory.institutions') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('directory.institutions') }}">Institutions</a></li>
+                        {% endif %}
+                        {% if route_exists('directory.offices') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('directory.offices') }}">Find an office</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}#how-it-works">How it works</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}#verification">Verification</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content" tabindex="-1">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="container pt-3">
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category if category in ('success', 'danger', 'warning') else 'info' }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <h2>Citizen Compass – Uganda</h2>
+                    <p class="mb-0">Know Before You Go. An independent university project that helps citizens prepare for visits to government offices.</p>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <h2>Information</h2>
+                    <ul class="list-unstyled mb-0">
+                        <li><a href="{{ url_for('main.disclaimer') }}">Disclaimer</a></li>
+                        <li><a href="{{ url_for('main.privacy') }}">Privacy notice</a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <h2>Contact</h2>
+                    {% if contact_email %}
+                    <p class="mb-0"><a href="mailto:{{ contact_email }}">{{ contact_email }}</a></p>
+                    {% else %}
+                    <p class="mb-0">Contact details will be added before public launch.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <p class="footer-bottom mb-0">
+                Always confirm important details with the responsible agency. Citizen Compass does not process applications or payments.
+                &copy; {{ current_year }} Citizen Compass.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

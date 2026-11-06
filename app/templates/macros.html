@@ -1,0 +1,29 @@
+{# Small reusable pieces of page. Import them with:
+   {% from "macros.html" import status_badge %} #}
+
+{% macro status_badge(status, label) %}
+<span class="status-badge status-{{ status }}">
+    <i class="bi {{ {'verified': 'bi-patch-check-fill', 'pending': 'bi-hourglass-split', 'outdated': 'bi-exclamation-triangle-fill', 'unavailable': 'bi-question-circle-fill'}.get(status, 'bi-info-circle-fill') }}" aria-hidden="true"></i>
+    {{ label }}
+</span>
+{% endmacro %}
+
+{% macro demo_badge() %}
+<span class="status-badge status-demo">
+    <i class="bi bi-cone-striped" aria-hidden="true"></i>
+    Demonstration only
+</span>
+{% endmacro %}
+
+{% macro empty_state(message) %}
+<p class="empty-state mb-0">{{ message }}</p>
+{% endmacro %}
+
+{# A card that is a link only when there is a real page to link to. #}
+{% macro info_card(href=none) %}
+{% if href %}
+<a class="info-card" href="{{ href }}">{{ caller() }}</a>
+{% else %}
+<div class="info-card">{{ caller() }}</div>
+{% endif %}
+{% endmacro %}

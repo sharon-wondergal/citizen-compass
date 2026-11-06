@@ -1,17 +1,200 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Citizen Compass</title>
-</head>
-<body>
-    <h1>Citizen Compass is running</h1>
-    <p>Know Before You Go.</p>
-    <ul>
-        <li>Database connection: {{ "OK" if database.connected else "Not working" }}</li>
-        <li>Foreign key checks: {{ "On" if database.foreign_keys else "Off" }}</li>
-    </ul>
-    <p>This is a temporary setup page. The real homepage arrives in Stage 6.</p>
-</body>
-</html>
+{% extends "base.html" %}
+{% from "macros.html" import status_badge, demo_badge, empty_state, info_card %}
+
+{% block title %}Citizen Compass – Know Before You Go{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <h1>Know Before You Go.</h1>
+        <p class="lead">Check the documents, fees, offices and processing time for a government service in Uganda before you travel.</p>
+        <p class="hero-question">Do I have everything I need, how much will it cost, and where should I go?</p>
+
+        <div class="search-panel">
+            {% if route_exists('services.search') %}
+            <form action="{{ url_for('services.search') }}" method="get" role="search">
+                <label class="form-label" for="home-search">Search for a government service</label>
+                <div class="d-flex flex-column flex-sm-row gap-2">
+                    <input class="form-control" id="home-search" name="q" type="search" maxlength="100" placeholder="For example: passport">
+                    <button class="btn btn-cc-primary px-4" type="submit">
+                        <i class="bi bi-search" aria-hidden="true"></i> Search
+                    </button>
+                </div>
+            </form>
+            {% else %}
+            <label class="form-label" for="home-search">Search for a government service</label>
+            <div class="d-flex flex-column flex-sm-row gap-2">
+                <input class="form-control" id="home-search" type="search" disabled aria-describedby="search-note">
+                <button class="btn btn-cc-primary px-4" type="button" disabled>
+                    <i class="bi bi-search" aria-hidden="true"></i> Search
+                </button>
+            </div>
+            <p class="search-note" id="search-note">Search isn't available yet. It's being built.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="page-section" aria-labelledby="popular-heading">
+    <div class="container">
+        <h2 id="popular-heading">Popular services</h2>
+        <p class="section-intro">The services people have viewed most in the last 30 days.</p>
+        {% if popular %}
+        <div class="row g-3">
+            {% for item in popular %}
+            <div class="col-md-6 col-lg-4">
+                {% set href = url_for('services.detail', slug=item.service.slug) if route_exists('services.detail') else none %}
+                {% call info_card(href) %}
+                <h3>{{ item.service.name }}</h3>
+                <p class="mb-2">{{ item.service.institution.name }}</p>
+                {{ status_badge(item.status, status_labels[item.status]) }}
+                {% if item.service.is_demo %}{{ demo_badge() }}{% endif %}
+                {% endcall %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ empty_state("No popular services to show yet.") }}
+        {% endif %}
+    </div>
+</section>
+
+<section class="page-section alt" aria-labelledby="categories-heading">
+    <div class="container">
+        <h2 id="categories-heading">Browse by category</h2>
+        <p class="section-intro">Government services grouped by what you need to do.</p>
+        {% if categories %}
+        <div class="row g-3">
+            {% for category, service_count in categories %}
+            <div class="col-sm-6 col-lg-3">
+                {% set href = url_for('services.search', category=category.slug) if route_exists('services.search') else none %}
+                {% call info_card(href) %}
+                {% if category.icon %}<i class="bi {{ category.icon }} card-icon" aria-hidden="true"></i>{% endif %}
+                <h3>{{ category.name }}</h3>
+                <p>{% if service_count == 0 %}No services added yet{% elif service_count == 1 %}1 service{% else %}{{ service_count }} services{% endif %}</p>
+                {% endcall %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ empty_state("No categories have been added yet.") }}
+        {% endif %}
+    </div>
+</section>
+
+<section class="page-section" aria-labelledby="institutions-heading">
+    <div class="container">
+        <h2 id="institutions-heading">Browse by institution</h2>
+        <p class="section-intro">Find services by the ministry or agency responsible for them.</p>
+        {% if institutions %}
+        <div class="row g-3">
+            {% for institution, service_count in institutions %}
+            <div class="col-sm-6 col-lg-3">
+                {% set href = url_for('directory.institution_detail', slug=institution.slug) if route_exists('directory.institution_detail') else none %}
+                {% call info_card(href) %}
+                <h3>{{ institution.name }}</h3>
+                <p>{% if institution.acronym %}{{ institution.acronym }} · {% endif %}{% if service_count == 1 %}1 service{% else %}{{ service_count }} services{% endif %}</p>
+                {% endcall %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        {{ empty_state("No institutions have been added yet.") }}
+        {% endif %}
+    </div>
+</section>
+
+<section class="page-section alt" aria-labelledby="offices-heading">
+    <div class="container">
+        <h2 id="offices-heading">Find a government office</h2>
+        <p class="section-intro">Choose your district or region to see offices near you first, so you don't travel to Kampala if a closer office can help.</p>
+        {% if route_exists('directory.offices') %}
+        <a class="btn btn-cc-primary" href="{{ url_for('directory.offices') }}">Find an office</a>
+        {% else %}
+        {{ empty_state("The office finder isn't available yet. It's being built.") }}
+        {% endif %}
+    </div>
+</section>
+
+<section class="page-section" id="how-it-works" aria-labelledby="how-heading">
+    <div class="container">
+        <h2 id="how-heading">How Citizen Compass works</h2>
+        <p class="section-intro">We turn official government information into one clear checklist.</p>
+        <div class="row g-3">
+            <div class="col-md-6 col-lg-3">
+                <div class="info-card">
+                    <span class="step-number">1</span>
+                    <h3>Find your service</h3>
+                    <p>Search by service, agency or everyday words.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="info-card">
+                    <span class="step-number">2</span>
+                    <h3>Check what you need</h3>
+                    <p>See the documents, fees and processing time in one place.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="info-card">
+                    <span class="step-number">3</span>
+                    <h3>Find the right office</h3>
+                    <p>Choose your district to see offices near you first.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="info-card">
+                    <span class="step-number">4</span>
+                    <h3>Prepare and go</h3>
+                    <p>Tick off each item, print your checklist and travel with confidence.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page-section alt" id="verification" aria-labelledby="verification-heading">
+    <div class="container">
+        <h2 id="verification-heading">How we check information</h2>
+        <p class="section-intro">Every section shows its official source and when it was last checked. One person enters information, and a different person checks it against the official source.</p>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="info-card">
+                    {{ status_badge("verified", status_labels["verified"]) }}
+                    <p class="mt-2">Checked against an official source, and not yet due for another review.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card">
+                    {{ status_badge("pending", status_labels["pending"]) }}
+                    <p class="mt-2">Not confirmed yet. Please check with the responsible agency.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card">
+                    {{ status_badge("outdated", status_labels["outdated"]) }}
+                    <p class="mt-2">Its review date has passed, so it may have changed.</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="info-card">
+                    {{ status_badge("unavailable", status_labels["unavailable"]) }}
+                    <p class="mt-2">We couldn't find official information for this section.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="page-section" aria-labelledby="feedback-heading">
+    <div class="container">
+        <h2 id="feedback-heading">Help us keep information correct</h2>
+        <p class="section-intro">If you find a wrong fee, a missing document or an old office location, tell us. We check every report against official sources before changing anything.</p>
+        {% if route_exists('reports.new') %}
+        <a class="btn btn-cc-primary" href="{{ url_for('reports.new') }}">Report a problem</a>
+        {% else %}
+        {{ empty_state("Reporting isn't available yet. It's being built.") }}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

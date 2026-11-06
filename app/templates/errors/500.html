@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Something went wrong | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container text-page">
+        <h1>Something went wrong</h1>
+        <p>This is a problem on our side, not yours. Please try again in a few minutes.</p>
+        <a class="btn btn-cc-primary" href="{{ url_for('main.index') }}">Go to the homepage</a>
+    </div>
+</section>
+{% endblock %}

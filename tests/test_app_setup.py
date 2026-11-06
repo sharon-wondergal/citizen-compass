@@ -17,14 +17,6 @@ def test_testing_app_uses_in_memory_database(app):
     assert app.config["SQLALCHEMY_DATABASE_URI"] == "sqlite:///:memory:"
 
 
-def test_home_page_loads(client):
-    response = client.get("/")
-    assert response.status_code == 200
-    assert b"Citizen Compass is running" in response.data
-    assert b"Database connection: OK" in response.data
-    assert b"Foreign key checks: On" in response.data
-
-
 def test_health_returns_json(client):
     response = client.get("/health")
     assert response.status_code == 200

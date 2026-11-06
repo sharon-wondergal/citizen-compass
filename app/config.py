@@ -37,6 +37,9 @@ class Config:
     SESSION_COOKIE_SAMESITE = "Lax"
     PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
 
+    # Shown in the footer. Leave it unset until a real contact address exists.
+    CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL")
+
     # Refuse oversized requests. Citizen reports are short text.
     MAX_CONTENT_LENGTH = 1024 * 1024
 
