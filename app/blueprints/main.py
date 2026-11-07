@@ -6,6 +6,7 @@ from app.logic.home import (
     categories_with_counts,
     institutions_with_counts,
     popular_services,
+    quick_tags,
     site_counts,
 )
 from app.logic.system import check_database
@@ -26,6 +27,7 @@ def index():
         categories=categories_with_counts(),
         institutions=institutions_with_counts(),
         counts=site_counts(),
+        tags=quick_tags(),
     )
 
 

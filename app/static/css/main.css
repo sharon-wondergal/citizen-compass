@@ -4,17 +4,18 @@
 
 :root {
     /* Inspired by the colours of the Ugandan flag. */
-    --cc-ink: #141414;
-    --cc-ink-dark: #000000;
+    --cc-ink: #1e2b2f;
+    --cc-ink-dark: #0c1a1e;
     --cc-yellow: #fcdc04;
     --cc-yellow-hover: #e8ca00;
     --cc-yellow-soft: #fff9d1;
     --cc-red: #d90000;
-    --cc-text: #1a1a1a;
-    --cc-muted: #555555;
+    --cc-text: #1e2b2f;
+    --cc-muted: #4a5b5e;
+    --cc-page: #f9f6f0;
     --cc-surface: #ffffff;
-    --cc-section: #f6f5f1;
-    --cc-border: #dedcd4;
+    --cc-section: #f1ede6;
+    --cc-border: #eee7dd;
 
     --cc-verified: #146c43;
     --cc-verified-bg: #e3f4ea;
@@ -34,7 +35,7 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background: var(--cc-surface);
+    background: var(--cc-page);
     font-size: 1.0625rem;
     line-height: 1.6;
 }
@@ -142,123 +143,313 @@ summary:focus-visible {
     --bs-btn-disabled-opacity: 1;
 }
 
-/* ---------- Hero ---------- */
+/* ---------- Homepage question area ---------- */
 
-.hero {
+.ask-section {
+    padding: 2rem 0 1.5rem;
+}
+
+.ask-container {
+    max-width: 1100px;
+}
+
+.ask-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.ask-header h1 {
+    margin: 0;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+}
+
+.ask-header h1 .bi {
+    color: var(--cc-red);
+}
+
+.flag-bars {
+    display: flex;
+    gap: 4px;
+}
+
+.flag-bars span {
+    width: 12px;
+    height: 36px;
+    border-radius: 3px;
+}
+
+.flag-bar-black { background: #000000; }
+.flag-bar-yellow { background: var(--cc-yellow); }
+.flag-bar-red { background: var(--cc-red); }
+
+.ask-subhead {
+    margin-bottom: 1.5rem;
+    padding: 0.85rem 1.2rem;
+    border-left: 6px solid var(--cc-yellow);
+    border-radius: 0 12px 12px 0;
+    background: var(--cc-surface);
+    color: var(--cc-muted);
+    font-size: 1.1rem;
+}
+
+.ask-subhead .bi {
+    margin-right: 0.4rem;
+    color: var(--cc-red);
+}
+
+.ask-card {
+    margin-bottom: 1.75rem;
+    padding: 1.5rem;
+    border: 1px solid var(--cc-border);
+    border-radius: 32px;
+    background: var(--cc-surface);
+    box-shadow: 0 16px 32px -8px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+.ask-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--cc-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.ask-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.ask-box input {
+    flex: 1 1 260px;
+    min-width: 0;
+    min-height: 56px;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #cfc6b8;
+    border-radius: 60px;
+    background: #fefcf9;
+    color: var(--cc-text);
+    font-size: 1.1rem;
+}
+
+.ask-box input:focus {
+    border-color: var(--cc-ink);
+    outline: 3px solid var(--cc-yellow);
+    box-shadow: none;
+}
+
+.ask-box button {
+    flex: 0 0 auto;
+    min-height: 56px;
+    padding: 0 2.2rem;
+    border: 0;
+    border-radius: 60px;
     background: var(--cc-ink);
     color: #ffffff;
-    padding: 2.5rem 0 3rem;
-}
-
-.hero h1 {
-    color: #ffffff;
-    font-size: 2.25rem;
-}
-
-.hero .lead {
-    max-width: 42rem;
-    font-size: 1.125rem;
-}
-
-.hero-question {
-    max-width: 42rem;
-    margin-bottom: 1.5rem;
-    padding-left: 0.875rem;
-    border-left: 4px solid var(--cc-yellow);
-    font-style: italic;
-}
-
-.search-panel {
-    max-width: 44rem;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    background: var(--cc-surface);
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
-    color: var(--cc-text);
-}
-
-.search-panel label {
-    color: var(--cc-ink);
-    font-weight: 700;
-}
-
-.search-panel .form-control {
-    min-height: 48px;
-    border-color: #8b97a5;
-    font-size: 1.0625rem;
-}
-
-/* The example card shows the checklist layout. Its values are placeholders. */
-.example-card {
-    padding: 1.1rem;
-    border-radius: 0.75rem;
-    background: var(--cc-surface);
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
-    color: var(--cc-text);
-}
-
-.example-label {
-    margin-bottom: 0.75rem;
-    padding: 0.3rem 0.6rem;
-    border-radius: 0.4rem;
-    background: var(--cc-yellow-soft);
-    color: var(--cc-ink-dark);
-    font-size: 0.85rem;
+    font-size: 1.1rem;
     font-weight: 600;
 }
 
-.example-title {
-    color: var(--cc-ink);
+.ask-box button:hover {
+    background: var(--cc-ink-dark);
 }
 
-.example-list {
-    margin: 0 0 0.75rem;
-    padding: 0;
-    list-style: none;
+.ask-box button .bi {
+    color: var(--cc-yellow);
 }
 
-.example-list li {
-    padding: 0.15rem 0;
-}
-
-.example-list .bi {
-    margin-right: 0.35rem;
-    color: var(--cc-ink);
-}
-
-.example-facts {
-    margin-bottom: 0.6rem;
-}
-
-.example-facts > div {
+.quick-tags {
     display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+}
+
+.quick-tags-label {
+    color: var(--cc-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.quick-tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.3rem 1rem;
+    border-radius: 40px;
+    background: var(--cc-section);
+    color: var(--cc-text);
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.quick-tag:hover {
+    background: var(--cc-yellow);
+    color: #000000;
+}
+
+.ask-prompt {
+    padding: 2.5rem 1.5rem;
+    border: 2px dashed #d9d0c4;
+    border-radius: 24px;
+    background: #fefcf8;
+    color: var(--cc-muted);
+    text-align: center;
+}
+
+.ask-prompt .bi {
+    display: block;
+    margin-bottom: 0.75rem;
+    color: #a89e90;
+    font-size: 3rem;
+}
+
+.ask-prompt p {
+    margin: 0;
+    font-size: 1.15rem;
+}
+
+/* The answer card */
+
+.answer-card {
+    padding: 1.5rem;
+    border: 1px solid var(--cc-border);
+    border-radius: 28px;
+    background: var(--cc-surface);
+    box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.06);
+}
+
+.answer-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.answer-header h2 {
+    margin: 0;
+    font-size: 1.6rem;
+}
+
+.answer-agency {
+    padding: 0.35rem 1rem;
+    border-radius: 40px;
+    background: var(--cc-ink);
+    color: var(--cc-yellow);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.answer-badges {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px dashed var(--cc-border);
+}
+
+.answer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
     gap: 1rem;
-    padding: 0.3rem 0;
+    margin-bottom: 1.25rem;
+}
+
+.answer-fact {
+    padding: 1.1rem 1.25rem;
+    border-left: 6px solid var(--cc-yellow);
+    border-radius: 20px;
+    background: #faf8f4;
+}
+
+.answer-fact-label {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--cc-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.answer-fact-label .bi {
+    margin-right: 0.25rem;
+    color: var(--cc-red);
+    font-size: 1.1rem;
+}
+
+.answer-fact-value {
+    font-size: 1.05rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.answer-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--cc-border);
 }
 
-.example-facts dt {
+.answer-note {
+    margin-left: auto;
+    padding: 0.4rem 1rem;
+    border-radius: 60px;
+    background: var(--cc-section);
     color: var(--cc-muted);
-    font-weight: 600;
+    font-size: 0.85rem;
 }
 
-.example-facts dd {
-    margin: 0;
-    font-weight: 700;
+.answer-missing {
+    display: flex;
+    gap: 1rem;
+    padding: 1.4rem 1.6rem;
+    border-left: 8px solid var(--cc-red);
+    border-radius: 20px;
+    background: #fff3e6;
 }
 
-.example-source {
-    margin: 0;
-    color: var(--cc-verified);
-    font-size: 0.9rem;
+.answer-missing > .bi {
+    color: var(--cc-red);
+    font-size: 2rem;
+}
+
+.answer-missing-title {
+    margin-bottom: 0.25rem;
     font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+@media (min-width: 700px) {
+    .answer-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ask-card,
+    .answer-card {
+        padding: 1.8rem 2rem;
+    }
+
+    .ask-header h1 {
+        font-size: 2.3rem;
+    }
 }
 
 .count-strip {
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--cc-border);
-    background: var(--cc-section);
+    padding: 0.5rem 0 1.5rem;
 }
 
 .count-list {
@@ -864,18 +1055,32 @@ a.info-card:hover {
     color: var(--cc-red);
 }
 
-.hero {
-    background:
-        radial-gradient(60rem 30rem at 85% 10%, rgba(252, 220, 4, 0.14), transparent 70%),
-        var(--cc-ink);
+/* Soft, rounded shapes used across the site. */
+.info-card,
+.checklist-section,
+.stat-tile,
+.empty-state,
+.filter-panel {
+    border-radius: 20px;
 }
 
-.hero h1 .highlight {
+.btn {
+    border-radius: 60px;
+}
+
+.btn-cc-primary {
+    --bs-btn-bg: var(--cc-ink);
+    --bs-btn-color: #ffffff;
+    --bs-btn-border-color: var(--cc-ink);
+    --bs-btn-hover-bg: var(--cc-ink-dark);
+    --bs-btn-hover-color: #ffffff;
+    --bs-btn-hover-border-color: var(--cc-ink-dark);
+    --bs-btn-active-bg: var(--cc-ink-dark);
+    --bs-btn-active-color: #ffffff;
+}
+
+.btn-cc-primary .bi {
     color: var(--cc-yellow);
-}
-
-.hero-question {
-    border-left-color: var(--cc-red);
 }
 
 /* A short red rule under each homepage section heading. */
@@ -911,21 +1116,6 @@ a.info-card:hover {
     transform: translateY(-2px);
 }
 
-.count-strip {
-    border-bottom: 0;
-    background: var(--cc-yellow);
-}
-
-.count-list strong,
-.count-list li,
-.count-note {
-    color: var(--cc-ink-dark);
-}
-
-.count-list strong {
-    font-size: 1.6rem;
-}
-
 /* The closing call to action on the homepage. */
 .cta-band {
     background: var(--cc-ink);
@@ -938,6 +1128,15 @@ a.info-card:hover {
 
 .cta-band .section-intro {
     color: #e6e6e6;
+}
+
+.cta-band .btn-cc-primary {
+    --bs-btn-bg: var(--cc-yellow);
+    --bs-btn-color: #000000;
+    --bs-btn-border-color: var(--cc-yellow);
+    --bs-btn-hover-bg: var(--cc-yellow-hover);
+    --bs-btn-hover-color: #000000;
+    --bs-btn-hover-border-color: var(--cc-yellow-hover);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -953,8 +1152,6 @@ a.info-card:hover {
 /* ---------- Larger screens ---------- */
 
 @media (min-width: 768px) {
-    .hero { padding: 4rem 0; }
-    .hero h1 { font-size: 3rem; }
     .page-section { padding: 3.5rem 0; }
 }
 

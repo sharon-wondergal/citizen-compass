@@ -7,8 +7,10 @@ from flask import Blueprint, abort, jsonify, render_template, request
 from app.extensions import db, limiter
 from app.logic.analytics import record_service_view
 from app.logic.checklist import build_checklist, choose_variant, get_service
+from app.logic.quick_answer import find_answer
 from app.logic.search import (
     MODE_LABELS,
+    clean_query,
     filter_options,
     log_search,
     parse_filters,
@@ -47,6 +49,16 @@ def search():
 @limiter.limit("120 per minute")
 def suggestions():
     return jsonify(suggestions=suggest_services(request.args.get("q", "")))
+
+
+@services_bp.route("/services/quick-answer")
+@limiter.limit("60 per minute")
+def quick_answer():
+    """The short answer shown on the homepage."""
+    query = clean_query(request.args.get("q", ""))
+    if not query:
+        return jsonify(found=False, query="", suggestion=None)
+    return jsonify(find_answer(query))
 
 
 @services_bp.route("/services/<slug>")

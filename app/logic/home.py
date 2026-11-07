@@ -56,6 +56,24 @@ def popular_services(today=None):
     return db.session.scalars(statement).all()
 
 
+def quick_tags():
+    """Shortcut buttons under the search box: popular services, or the first few."""
+    services = popular_services() or db.session.scalars(
+        select(GovernmentService)
+        .where(GovernmentService.is_archived.is_(False))
+        .order_by(GovernmentService.name)
+        .limit(POPULAR_SERVICE_LIMIT)
+    ).all()
+    return [
+        {
+            "label": service.name.removeprefix("Demonstration "),
+            "query": service.name,
+            "slug": service.slug,
+        }
+        for service in services
+    ]
+
+
 def categories_with_counts():
     """Active categories, each with its number of available services."""
     statement = (

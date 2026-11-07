@@ -81,15 +81,29 @@ def test_report_page_is_linked_from_the_homepage(client, database):
     assert 'href="/report"' in page_text(client)
 
 
-def test_example_card_is_labelled_and_uses_placeholders(client, database):
+def test_no_fee_amount_appears_on_the_homepage(client, sample):
+    assert re.findall(r"UGX [\d,]+", page_text(client)) == []
+
+
+def test_homepage_prompts_for_a_question(client, database):
     text = page_text(client)
-    assert "Example layout only. Not real information." in text
-    assert "UGX 00,000" in text
+    assert "One question. Clear answers" in text
+    assert "Type a question or pick a quick tag above." in text
+    assert "js/quick-answer.js" in text
 
 
-def test_no_real_looking_amount_appears_on_the_homepage(client, sample):
-    amounts = re.findall(r"UGX [\d,]+", page_text(client))
-    assert set(amounts) == {"UGX 00,000"}
+def test_quick_tags_link_to_real_checklists(client, sample):
+    text = page_text(client)
+    assert 'href="/services/example-service"' in text
+    assert 'data-quick-query="Example Service"' in text
+
+
+def test_fictional_quick_tags_are_labelled(client, sample):
+    assert "Try a fictional example:" in page_text(client)
+
+
+def test_no_quick_tags_without_services(client, database):
+    assert 'class="quick-tag"' not in page_text(client)
 
 
 def test_counts_are_hidden_with_no_services(client, database):

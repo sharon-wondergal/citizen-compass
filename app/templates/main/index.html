@@ -4,50 +4,55 @@
 {% block title %}Citizen Compass – Know Before You Go{% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="container">
-        <div class="row g-4 align-items-center">
-            <div class="col-lg-7">
-                <h1>Know Before <span class="highlight">You Go.</span></h1>
-                <p class="lead">Check the documents, fees, offices and processing time for a government service in Uganda before you travel.</p>
-                <p class="hero-question">Do I have everything I need, how much will it cost, and where should I go?</p>
-
-                <div class="search-panel">
-                    <form action="{{ url_for('services.search') }}" method="get" role="search">
-                        <label class="form-label" for="home-search">Search for a government service</label>
-                        <div class="d-flex flex-column flex-sm-row gap-2">
-                            <input class="form-control" id="home-search" name="q" type="search" maxlength="100"
-                                   placeholder="For example: passport" list="service-suggestions" autocomplete="off"
-                                   data-suggest-url="{{ url_for('services.suggestions') }}">
-                            <datalist id="service-suggestions"></datalist>
-                            <button class="btn btn-cc-primary px-4" type="submit">
-                                <i class="bi bi-search" aria-hidden="true"></i> Search
-                            </button>
-                        </div>
-                    </form>
-                </div>
+<section class="ask-section">
+    <div class="container ask-container">
+        <div class="ask-header">
+            <div class="flag-bars" aria-hidden="true">
+                <span class="flag-bar-black"></span>
+                <span class="flag-bar-yellow"></span>
+                <span class="flag-bar-red"></span>
             </div>
+            <h1><i class="bi bi-compass" aria-hidden="true"></i> Know Before You Go.</h1>
+        </div>
 
-            <div class="col-lg-5">
-                {# A picture of the layout. The amount is a placeholder, never a real fee. #}
-                <aside class="example-card" aria-label="Example of a checklist layout">
-                    <p class="example-label"><i class="bi bi-eye" aria-hidden="true"></i> Example layout only. Not real information.</p>
-                    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
-                        <strong class="example-title">Your service checklist</strong>
-                        {{ status_badge("verified", status_labels["verified"]) }}
-                    </div>
-                    <ul class="example-list">
-                        <li><i class="bi bi-check-square-fill" aria-hidden="true"></i> Application form</li>
-                        <li><i class="bi bi-check-square-fill" aria-hidden="true"></i> Proof of identity</li>
-                        <li><i class="bi bi-square" aria-hidden="true"></i> Supporting letter</li>
-                    </ul>
-                    <dl class="example-facts">
-                        <div><dt>Official fee</dt><dd>UGX 00,000</dd></div>
-                        <div><dt>Nearest office</dt><dd>In your district</dd></div>
-                        <div><dt>Expected time</dt><dd>0 working days</dd></div>
-                    </dl>
-                    <p class="example-source"><i class="bi bi-patch-check" aria-hidden="true"></i> Official source and check date shown</p>
-                </aside>
+        <p class="ask-subhead">
+            <i class="bi bi-pin-map-fill" aria-hidden="true"></i>
+            One question. Clear answers: documents, fee, office, time and official link.
+        </p>
+
+        <div class="ask-card">
+            {# Without JavaScript, this form opens the normal search page. #}
+            <form action="{{ url_for('services.search') }}" method="get" role="search" id="ask-form">
+                <label class="ask-label" for="home-search">
+                    <i class="bi bi-search" aria-hidden="true"></i> Ask about a Ugandan government service
+                </label>
+                <div class="ask-box">
+                    <input id="home-search" name="q" type="search" maxlength="100"
+                           placeholder="For example: passport, birth record, tax number"
+                           list="service-suggestions" autocomplete="off"
+                           data-suggest-url="{{ url_for('services.suggestions') }}">
+                    <datalist id="service-suggestions"></datalist>
+                    <button type="submit"><i class="bi bi-arrow-right" aria-hidden="true"></i> Find</button>
+                </div>
+            </form>
+
+            {% if tags %}
+            <div class="quick-tags">
+                <span class="quick-tags-label">
+                    <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
+                    {{ "Try a fictional example:" if counts.demo_services else "Try:" }}
+                </span>
+                {% for tag in tags %}
+                <a class="quick-tag" href="{{ url_for('services.detail', slug=tag.slug) }}" data-quick-query="{{ tag.query }}">{{ tag.label }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div id="quick-answer" data-answer-url="{{ url_for('services.quick_answer') }}" aria-live="polite">
+            <div class="ask-prompt">
+                <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+                <p>Type a question or pick a quick tag above.<br>Get the essentials before you leave home.</p>
             </div>
         </div>
     </div>
@@ -261,4 +266,5 @@
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/search-suggestions.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/quick-answer.js') }}" defer></script>
 {% endblock %}
