@@ -1083,6 +1083,11 @@ a.info-card:hover {
     color: var(--cc-yellow);
 }
 
+.btn-link {
+    --bs-btn-color: var(--cc-ink);
+    --bs-btn-hover-color: var(--cc-red);
+}
+
 /* A short red rule under each homepage section heading. */
 .page-section > .container > h2::after {
     content: "";

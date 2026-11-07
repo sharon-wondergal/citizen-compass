@@ -28,7 +28,7 @@
                 </label>
                 <div class="ask-box">
                     <input id="home-search" name="q" type="search" maxlength="100"
-                           placeholder="For example: passport, birth record, tax number"
+                           placeholder="For example: passport, national ID, TIN"
                            list="service-suggestions" autocomplete="off"
                            data-suggest-url="{{ url_for('services.suggestions') }}">
                     <datalist id="service-suggestions"></datalist>
@@ -40,7 +40,7 @@
             <div class="quick-tags">
                 <span class="quick-tags-label">
                     <i class="bi bi-lightning-charge-fill" aria-hidden="true"></i>
-                    {{ "Try a fictional example:" if counts.demo_services else "Try:" }}
+                    {{ "Try a fictional example:" if tags|rejectattr("is_demo")|list|length == 0 else "Try:" }}
                 </span>
                 {% for tag in tags %}
                 <a class="quick-tag" href="{{ url_for('services.detail', slug=tag.slug) }}" data-quick-query="{{ tag.query }}">{{ tag.label }}</a>
@@ -67,7 +67,7 @@
             <li><strong>{{ counts.offices }}</strong> {{ "office" if counts.offices == 1 else "offices" }}</li>
         </ul>
         {% if counts.demo_services %}
-        <p class="count-note">This prototype uses fictional demonstration records. They aren't real government requirements.</p>
+        <p class="count-note">This prototype includes fictional demonstration records, labelled "Demonstration only". They aren't real government requirements.</p>
         {% endif %}
     </div>
 </section>

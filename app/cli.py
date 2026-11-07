@@ -11,6 +11,7 @@ from app.models.base import ADMIN_ROLES
 from seed.categories import seed_categories
 from seed.demo import remove_demo_data, seed_demo_data
 from seed.presentation import seed_presentation_data
+from seed.real_services import seed_real_services
 
 seed_commands = AppGroup("seed", help="Add starting data to the database.")
 admin_commands = AppGroup("admin", help="Manage administrator accounts.")
@@ -35,6 +36,13 @@ def presentation_command():
     """Add a fuller set of fictional records for presenting the prototype."""
     added = seed_presentation_data()
     click.echo(f"Added {added} more demonstration services.")
+
+
+@seed_commands.command("real")
+def real_command():
+    """Add real services from official sources, all pending verification."""
+    added = seed_real_services()
+    click.echo(f"Added {added} real services. All are pending verification.")
 
 
 @seed_commands.command("remove-demo")

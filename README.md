@@ -27,14 +27,18 @@ Under development, stage by stage. The citizen pages work: homepage, service sea
 
 ## Presenting the prototype
 
-The citizen pages are ready to present, using fictional records only:
+The citizen pages are ready to present, with real services and fictional examples:
 
 ```bash
+flask seed real
 flask seed presentation
 flask run
 ```
 
-Then open <http://127.0.0.1:5000>. Every record is labelled "Demonstration only", and fee amounts stay hidden because nothing has been verified. Remove the records with `flask seed remove-demo`.
+Then open <http://127.0.0.1:5000>.
+
+- `flask seed real` adds seven real services, entered from official pages on 7 November 2026. They're all pending verification, and fee amounts stay hidden from citizens until a second person checks them.
+- `flask seed presentation` adds fictional records labelled "Demonstration only". Remove them with `flask seed remove-demo`.
 
 ## Requirements
 

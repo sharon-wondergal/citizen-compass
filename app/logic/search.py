@@ -248,7 +248,7 @@ def run_search(filters):
     words = search_words(filters.query)
     services = sorted(
         matching_services(filters),
-        key=lambda service: (-relevance(service, words), service.name.lower()),
+        key=lambda service: (-relevance(service, words), service.is_demo, service.name.lower()),
     )
     items = [{"service": service, "status": overall_status(service)} for service in services]
     if filters.status:

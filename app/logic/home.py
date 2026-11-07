@@ -14,6 +14,7 @@ from app.models import (
 )
 
 POPULAR_SERVICE_LIMIT = 6
+QUICK_TAG_LIMIT = 7
 POPULAR_PERIOD_DAYS = 30
 INSTITUTION_LIMIT = 8
 
@@ -57,18 +58,19 @@ def popular_services(today=None):
 
 
 def quick_tags():
-    """Shortcut buttons under the search box: popular services, or the first few."""
-    services = popular_services() or db.session.scalars(
+    """Shortcut buttons under the search box. Real services come before fictional ones."""
+    services = db.session.scalars(
         select(GovernmentService)
         .where(GovernmentService.is_archived.is_(False))
-        .order_by(GovernmentService.name)
-        .limit(POPULAR_SERVICE_LIMIT)
+        .order_by(GovernmentService.is_demo, GovernmentService.name)
+        .limit(QUICK_TAG_LIMIT)
     ).all()
     return [
         {
             "label": service.name.removeprefix("Demonstration "),
             "query": service.name,
             "slug": service.slug,
+            "is_demo": service.is_demo,
         }
         for service in services
     ]
