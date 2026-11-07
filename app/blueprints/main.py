@@ -2,7 +2,12 @@
 
 from flask import Blueprint, jsonify, render_template
 
-from app.logic.home import categories_with_counts, institutions_with_counts, popular_services
+from app.logic.home import (
+    categories_with_counts,
+    institutions_with_counts,
+    popular_services,
+    site_counts,
+)
 from app.logic.system import check_database
 from app.logic.verification import overall_status
 
@@ -20,6 +25,7 @@ def index():
         popular=popular,
         categories=categories_with_counts(),
         institutions=institutions_with_counts(),
+        counts=site_counts(),
     )
 
 

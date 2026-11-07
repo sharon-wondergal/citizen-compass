@@ -5,17 +5,43 @@ from datetime import date, timedelta
 from sqlalchemy import and_, func, select
 
 from app.extensions import db
-from app.models import DailyView, GovernmentInstitution, GovernmentService, ServiceCategory
+from app.models import (
+    DailyView,
+    GovernmentInstitution,
+    GovernmentOffice,
+    GovernmentService,
+    ServiceCategory,
+)
 
 POPULAR_SERVICE_LIMIT = 6
 POPULAR_PERIOD_DAYS = 30
 INSTITUTION_LIMIT = 8
 
 
+def site_counts():
+    """How much the directory holds, counting only records citizens can see."""
+
+    def count_open(model):
+        return db.session.scalar(
+            select(func.count()).select_from(model).where(model.is_archived.is_(False))
+        )
+
+    return {
+        "services": count_open(GovernmentService),
+        "institutions": count_open(GovernmentInstitution),
+        "offices": count_open(GovernmentOffice),
+        "demo_services": db.session.scalar(
+            select(func.count())
+            .select_from(GovernmentService)
+            .where(GovernmentService.is_archived.is_(False), GovernmentService.is_demo.is_(True))
+        ),
+    }
+
+
 def popular_services(today=None):
     """The most viewed services over the last 30 days.
 
-    "Popular" comes only from real view counts, so with no visits this is empty.
+    "Popular" comes only from recorded view counts, so with no views this is empty.
     """
     today = today or date.today()
     since = today - timedelta(days=POPULAR_PERIOD_DAYS)

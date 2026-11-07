@@ -216,14 +216,14 @@ def remove_demo_data():
     ):
         db.session.delete(institution)
 
+    # Every fictional place name starts with this word. Real places never do.
     for district in db.session.scalars(
-        db.select(District).where(District.name.in_(DEMO_DISTRICTS))
+        db.select(District).where(District.name.like("Demonstration %"))
     ):
         db.session.delete(district)
     db.session.flush()
 
-    region = db.session.scalar(db.select(Region).filter_by(name=DEMO_REGION))
-    if region:
+    for region in db.session.scalars(db.select(Region).where(Region.name.like("Demonstration %"))):
         db.session.delete(region)
 
     db.session.commit()

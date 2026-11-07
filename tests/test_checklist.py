@@ -511,8 +511,10 @@ def test_agency_website_appears_only_when_known(client, real):
     assert 'href="https://example.test/agency"' in page(client)
 
 
-def test_report_link_waits_for_the_report_feature(client, real):
-    assert "Report incorrect information" not in page(client)
+def test_checklist_links_to_a_report_for_this_service(client, real):
+    text = page(client)
+    assert "Report incorrect information" in text
+    assert 'href="/report?service=example-service"' in text
 
 
 def test_page_data_is_escaped(client, real):

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Report received | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container text-page">
+        <h1>Thank you. We've received your report.</h1>
+        {% if reference.startswith("CC-") %}
+        <p>Your reference is <strong>{{ reference }}</strong>. Keep it if you want to ask about this report.</p>
+        {% endif %}
+        <p>We'll check it against official sources. Until then, the information on the site stays as it is, so please confirm details with the responsible agency.</p>
+        <a class="btn btn-cc-primary" href="{{ url_for('services.search') }}">Back to services</a>
+    </div>
+</section>
+{% endblock %}

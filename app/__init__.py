@@ -12,6 +12,7 @@ from app.blueprints.admin import admin_bp
 from app.blueprints.auth import auth_bp
 from app.blueprints.directory import directory_bp
 from app.blueprints.main import main_bp
+from app.blueprints.reports import reports_bp
 from app.blueprints.services import services_bp
 from app.cli import register_commands
 from app.config import get_config, validate_config
@@ -49,5 +50,6 @@ def register_blueprints(app):
     app.register_blueprint(main_bp)
     app.register_blueprint(services_bp)
     app.register_blueprint(directory_bp)
+    app.register_blueprint(reports_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)

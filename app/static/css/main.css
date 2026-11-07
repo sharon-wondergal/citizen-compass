@@ -185,6 +185,99 @@ summary:focus-visible {
     font-size: 1.0625rem;
 }
 
+/* The example card shows the checklist layout. Its values are placeholders. */
+.example-card {
+    padding: 1.1rem;
+    border-radius: 0.75rem;
+    background: var(--cc-surface);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+    color: var(--cc-text);
+}
+
+.example-label {
+    margin-bottom: 0.75rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.4rem;
+    background: var(--cc-gold-soft);
+    color: var(--cc-navy-dark);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.example-title {
+    color: var(--cc-navy);
+}
+
+.example-list {
+    margin: 0 0 0.75rem;
+    padding: 0;
+    list-style: none;
+}
+
+.example-list li {
+    padding: 0.15rem 0;
+}
+
+.example-list .bi {
+    margin-right: 0.35rem;
+    color: var(--cc-navy);
+}
+
+.example-facts {
+    margin-bottom: 0.6rem;
+}
+
+.example-facts > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.3rem 0;
+    border-top: 1px solid var(--cc-border);
+}
+
+.example-facts dt {
+    color: var(--cc-muted);
+    font-weight: 600;
+}
+
+.example-facts dd {
+    margin: 0;
+    font-weight: 700;
+}
+
+.example-source {
+    margin: 0;
+    color: var(--cc-verified);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.count-strip {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--cc-border);
+    background: var(--cc-section);
+}
+
+.count-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.count-list strong {
+    color: var(--cc-navy);
+    font-size: 1.35rem;
+}
+
+.count-note {
+    margin: 0.25rem 0 0;
+    color: var(--cc-muted);
+    font-size: 0.9rem;
+}
+
 /* ---------- Page sections ---------- */
 
 .page-section {
@@ -591,6 +684,12 @@ a.info-card:hover {
 .office-list .service-links li {
     padding: 0.35rem 0;
     border: 0;
+}
+
+/* Kept off screen rather than display:none, because spam tools skip hidden fields. */
+.report-extra {
+    position: absolute;
+    left: -9999px;
 }
 
 /* ---------- Administrator pages ---------- */

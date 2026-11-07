@@ -77,8 +77,35 @@ def test_category_cards_link_to_filtered_results(client, sample):
     assert 'href="/services?category=example-category"' in page_text(client)
 
 
-def test_unbuilt_features_have_no_links(client, database):
-    assert "Report a problem</a>" not in page_text(client)
+def test_report_page_is_linked_from_the_homepage(client, database):
+    assert 'href="/report"' in page_text(client)
+
+
+def test_example_card_is_labelled_and_uses_placeholders(client, database):
+    text = page_text(client)
+    assert "Example layout only. Not real information." in text
+    assert "UGX 00,000" in text
+
+
+def test_no_real_looking_amount_appears_on_the_homepage(client, sample):
+    amounts = re.findall(r"UGX [\d,]+", page_text(client))
+    assert set(amounts) == {"UGX 00,000"}
+
+
+def test_counts_are_hidden_with_no_services(client, database):
+    assert "count-strip" not in page_text(client)
+
+
+def test_counts_show_with_a_prototype_note(client, sample):
+    text = page_text(client)
+    assert "<strong>1</strong> service" in text
+    assert "fictional demonstration records" in text
+
+
+def test_prototype_note_goes_away_with_real_records(client, sample):
+    sample.service.is_demo = False
+    db.session.commit()
+    assert "fictional demonstration records" not in page_text(client)
 
 
 def test_directories_are_linked_from_the_homepage(client, database):

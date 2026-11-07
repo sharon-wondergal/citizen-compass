@@ -23,7 +23,18 @@ Under development, stage by stage. The citizen pages work: homepage, service sea
 | 9 | Institution and office directories | Done |
 | 10 | Administrator login and dashboard | Done |
 | 11A | Managing records from the admin area | Done |
-| 11B | Verification workflow | Next |
+| 11B | Verification workflow | Paused while the prototype is presented |
+
+## Presenting the prototype
+
+The citizen pages are ready to present, using fictional records only:
+
+```bash
+flask seed presentation
+flask run
+```
+
+Then open <http://127.0.0.1:5000>. Every record is labelled "Demonstration only", and fee amounts stay hidden because nothing has been verified. Remove the records with `flask seed remove-demo`.
 
 ## Requirements
 

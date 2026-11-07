@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% from "macros.html" import form_field %}
+
+{% block title %}Report a problem | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container admin-form">
+        <h1>Report a problem</h1>
+        <p class="section-intro">Tell us if something looks wrong. We check every report against official sources before changing anything, and reports aren't published.</p>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {{ form_field(form.service_id) }}
+            {{ form_field(form.service_name) }}
+            {{ form_field(form.problem_type) }}
+            {{ form_field(form.description) }}
+            {{ form_field(form.contact_info) }}
+            <div class="report-extra" aria-hidden="true">
+                {{ form.website.label }}
+                {{ form.website(tabindex="-1", autocomplete="off") }}
+            </div>
+            {{ form.submit(class="btn btn-cc-primary px-4") }}
+        </form>
+
+        <p class="section-dates mt-3">Read our <a href="{{ url_for('main.privacy') }}">privacy notice</a>. Citizen Compass isn't a government website, so we can't help with an application.</p>
+    </div>
+</section>
+{% endblock %}
