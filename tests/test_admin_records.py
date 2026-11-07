@@ -613,7 +613,7 @@ def test_unused_source_can_be_deleted(editor, world):
 
 def test_adding_a_category(editor, client, world):
     post(editor, "/admin/categories/new", name="New Category", is_active="y", display_order="0")
-    assert "New Category" in client.get("/").get_data(as_text=True)
+    assert "New Category" in client.get("/services").get_data(as_text=True)
 
 
 def test_hiding_a_category(editor, client, world):

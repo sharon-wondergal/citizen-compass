@@ -112,11 +112,11 @@
 
 <section class="page-section alt" aria-labelledby="popular-heading">
     <div class="container">
-        <h2 id="popular-heading">Popular services</h2>
-        <p class="section-intro">The services people have viewed most in the last 30 days.</p>
-        {% if popular %}
+        <h2 id="popular-heading">{{ featured_heading }}</h2>
+        <p class="section-intro">{{ featured_intro }}</p>
+        {% if featured %}
         <div class="row g-3">
-            {% for item in popular %}
+            {% for item in featured %}
             <div class="col-md-6 col-lg-4">
                 {% call info_card(url_for('services.detail', slug=item.service.slug)) %}
                 <h3>{{ item.service.name }}</h3>
@@ -127,8 +127,9 @@
             </div>
             {% endfor %}
         </div>
+        <p class="mt-3 mb-0"><a href="{{ url_for('services.search') }}">See all services</a></p>
         {% else %}
-        {{ empty_state("No popular services to show yet.") }}
+        {{ empty_state("No services have been added yet.") }}
         {% endif %}
     </div>
 </section>
@@ -150,7 +151,7 @@
             {% endfor %}
         </div>
         {% else %}
-        {{ empty_state("No categories have been added yet.") }}
+        {{ empty_state("Categories appear here once services are added.") }}
         {% endif %}
     </div>
 </section>

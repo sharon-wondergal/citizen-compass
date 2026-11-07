@@ -14,6 +14,7 @@ from app.models import (
 )
 
 POPULAR_SERVICE_LIMIT = 6
+MINIMUM_POPULAR_SERVICES = 3
 QUICK_TAG_LIMIT = 7
 POPULAR_PERIOD_DAYS = 30
 INSTITUTION_LIMIT = 8
@@ -55,6 +56,25 @@ def popular_services(today=None):
         .limit(POPULAR_SERVICE_LIMIT)
     )
     return db.session.scalars(statement).all()
+
+
+def featured_services():
+    """Services for the homepage, and an honest heading for them.
+
+    "Popular" is only claimed when real views exist. Otherwise the same space
+    lists the services that are available.
+    """
+    popular = popular_services()
+    if len(popular) >= MINIMUM_POPULAR_SERVICES:
+        return "Popular services", "The services people have viewed most in the last 30 days.", popular
+
+    services = db.session.scalars(
+        select(GovernmentService)
+        .where(GovernmentService.is_archived.is_(False))
+        .order_by(GovernmentService.name)
+        .limit(POPULAR_SERVICE_LIMIT)
+    ).all()
+    return "Available services", "Open a service to see its preparation checklist.", services
 
 
 def quick_tags():

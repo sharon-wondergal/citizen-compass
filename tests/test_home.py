@@ -8,7 +8,7 @@ import pytest
 
 from app.extensions import db
 from app.logic.home import popular_services
-from app.models import DailyView, ServiceCategory
+from app.models import DailyView, GovernmentService, ServiceCategory
 from seed.categories import CATEGORIES, seed_categories
 
 ICON_FILE = Path(__file__).resolve().parent.parent / (
@@ -50,8 +50,8 @@ def test_homepage_shows_all_four_verification_labels(client, database):
 
 def test_empty_database_shows_honest_messages(client, database):
     text = page_text(client)
-    assert "No popular services to show yet." in text
-    assert "No categories have been added yet." in text
+    assert "No services have been added yet." in text
+    assert "Categories appear here once services are added." in text
     assert "No institutions have been added yet." in text
 
 
@@ -153,10 +153,10 @@ def test_categories_show_their_service_counts(client, sample):
     assert "1 service" in text
 
 
-def test_archived_service_is_not_counted(client, sample):
+def test_category_without_open_services_is_hidden(client, sample):
     sample.service.is_archived = True
     db.session.commit()
-    assert "No services added yet" in page_text(client)
+    assert "Example Category" not in page_text(client)
 
 
 def test_inactive_category_is_hidden(client, sample):
@@ -165,8 +165,8 @@ def test_inactive_category_is_hidden(client, sample):
     assert "Example Category" not in page_text(client)
 
 
-def test_page_data_is_escaped(client, database):
-    db.session.add(ServiceCategory(name="<script>alert(1)</script>", slug="bad"))
+def test_page_data_is_escaped(client, sample):
+    sample.category.name = "<script>alert(1)</script>"
     db.session.commit()
     text = page_text(client)
     assert "<script>alert(1)</script>" not in text
@@ -175,13 +175,33 @@ def test_page_data_is_escaped(client, database):
 
 def test_popular_needs_real_views(client, sample):
     assert popular_services() == []
-    assert "No popular services to show yet." in page_text(client)
+    text = page_text(client)
+    assert "Popular services" not in text
+    assert "Available services" in text
+    assert "Example Service" in text
 
 
-def test_viewed_service_shows_status_and_demo_label(client, sample):
+def test_one_viewed_service_is_not_called_popular(client, sample):
+    add_views(sample.service)
+    assert "Available services" in page_text(client)
+
+
+def test_three_viewed_services_are_called_popular(client, sample):
+    add_views(sample.service)
+    for number in (2, 3):
+        extra = GovernmentService(
+            institution=sample.institution, category=sample.category,
+            name=f"Example {number}", slug=f"example-{number}", summary="Example only",
+        )
+        db.session.add(extra)
+        db.session.commit()
+        add_views(extra)
+    assert "Popular services" in page_text(client)
+
+
+def test_listed_service_shows_status_and_demo_label(client, sample):
     add_views(sample.service)
     text = page_text(client)
-    assert "No popular services to show yet." not in text
     assert "Example Service" in text
     assert "Demonstration only" in text
     assert 'status-badge status-pending' in text

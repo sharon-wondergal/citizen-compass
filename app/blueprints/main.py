@@ -4,8 +4,8 @@ from flask import Blueprint, jsonify, render_template
 
 from app.logic.home import (
     categories_with_counts,
+    featured_services,
     institutions_with_counts,
-    popular_services,
     quick_tags,
     site_counts,
 )
@@ -17,14 +17,17 @@ main_bp = Blueprint("main", __name__)
 
 @main_bp.route("/")
 def index():
-    popular = [
-        {"service": service, "status": overall_status(service)}
-        for service in popular_services()
+    heading, intro, services = featured_services()
+    featured = [
+        {"service": service, "status": overall_status(service)} for service in services
     ]
     return render_template(
         "main/index.html",
-        popular=popular,
-        categories=categories_with_counts(),
+        featured_heading=heading,
+        featured_intro=intro,
+        featured=featured,
+        # Only categories with something to open appear on the homepage.
+        categories=[row for row in categories_with_counts() if row[1]],
         institutions=institutions_with_counts(),
         counts=site_counts(),
         tags=quick_tags(),
