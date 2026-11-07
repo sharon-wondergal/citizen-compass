@@ -3,15 +3,18 @@
    (min-width) rules add to them on larger screens. */
 
 :root {
-    --cc-navy: #12305a;
-    --cc-navy-dark: #0b2140;
-    --cc-gold: #f2b705;
-    --cc-gold-soft: #fff6d6;
-    --cc-text: #1c2733;
-    --cc-muted: #4f5d6b;
+    /* Inspired by the colours of the Ugandan flag. */
+    --cc-ink: #141414;
+    --cc-ink-dark: #000000;
+    --cc-yellow: #fcdc04;
+    --cc-yellow-hover: #e8ca00;
+    --cc-yellow-soft: #fff9d1;
+    --cc-red: #d90000;
+    --cc-text: #1a1a1a;
+    --cc-muted: #555555;
     --cc-surface: #ffffff;
-    --cc-section: #f3f5f8;
-    --cc-border: #d5dbe3;
+    --cc-section: #f6f5f1;
+    --cc-border: #dedcd4;
 
     --cc-verified: #146c43;
     --cc-verified-bg: #e3f4ea;
@@ -23,8 +26,8 @@
     --cc-unavailable-bg: #e6e9ed;
 
     --bs-body-color: var(--cc-text);
-    --bs-link-color-rgb: 18, 48, 90;
-    --bs-link-hover-color-rgb: 11, 33, 64;
+    --bs-link-color-rgb: 20, 20, 20;
+    --bs-link-hover-color-rgb: 217, 0, 0;
 }
 
 body {
@@ -41,7 +44,7 @@ main {
 }
 
 h1, h2, h3 {
-    color: var(--cc-navy);
+    color: var(--cc-ink);
     font-weight: 700;
     line-height: 1.25;
 }
@@ -51,9 +54,9 @@ a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 summary:focus-visible {
-    outline: 3px solid var(--cc-gold);
+    outline: 3px solid var(--cc-yellow);
     outline-offset: 2px;
-    box-shadow: 0 0 0 5px var(--cc-navy);
+    box-shadow: 0 0 0 5px var(--cc-ink);
 }
 
 .skip-link {
@@ -62,8 +65,8 @@ summary:focus-visible {
     top: -4rem;
     z-index: 2000;
     padding: 0.75rem 1rem;
-    background: var(--cc-gold);
-    color: var(--cc-navy-dark);
+    background: var(--cc-yellow);
+    color: var(--cc-ink-dark);
     font-weight: 700;
 }
 
@@ -74,7 +77,7 @@ summary:focus-visible {
 /* ---------- Header ---------- */
 
 .independence-notice {
-    background: var(--cc-navy-dark);
+    background: var(--cc-ink-dark);
     color: #ffffff;
     font-size: 0.875rem;
     padding: 0.35rem 0;
@@ -90,7 +93,7 @@ summary:focus-visible {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    color: var(--cc-navy);
+    color: var(--cc-ink);
     font-weight: 700;
     line-height: 1.1;
 }
@@ -106,14 +109,14 @@ summary:focus-visible {
     display: flex;
     align-items: center;
     min-height: 44px;
-    color: var(--cc-navy);
+    color: var(--cc-ink);
     font-weight: 600;
 }
 
 .site-header .navbar-toggler {
     min-width: 44px;
     min-height: 44px;
-    border-color: var(--cc-navy);
+    border-color: var(--cc-ink);
 }
 
 /* ---------- Buttons ---------- */
@@ -125,14 +128,14 @@ summary:focus-visible {
 }
 
 .btn-cc-primary {
-    --bs-btn-bg: var(--cc-gold);
-    --bs-btn-color: var(--cc-navy-dark);
-    --bs-btn-border-color: var(--cc-gold);
-    --bs-btn-hover-bg: #d9a404;
-    --bs-btn-hover-color: var(--cc-navy-dark);
-    --bs-btn-hover-border-color: #d9a404;
-    --bs-btn-active-bg: #d9a404;
-    --bs-btn-active-color: var(--cc-navy-dark);
+    --bs-btn-bg: var(--cc-yellow);
+    --bs-btn-color: var(--cc-ink-dark);
+    --bs-btn-border-color: var(--cc-yellow);
+    --bs-btn-hover-bg: var(--cc-yellow-hover);
+    --bs-btn-hover-color: var(--cc-ink-dark);
+    --bs-btn-hover-border-color: var(--cc-yellow-hover);
+    --bs-btn-active-bg: var(--cc-yellow-hover);
+    --bs-btn-active-color: var(--cc-ink-dark);
     --bs-btn-disabled-bg: #dfe3e8;
     --bs-btn-disabled-color: var(--cc-muted);
     --bs-btn-disabled-border-color: #dfe3e8;
@@ -142,7 +145,7 @@ summary:focus-visible {
 /* ---------- Hero ---------- */
 
 .hero {
-    background: var(--cc-navy);
+    background: var(--cc-ink);
     color: #ffffff;
     padding: 2.5rem 0 3rem;
 }
@@ -161,7 +164,7 @@ summary:focus-visible {
     max-width: 42rem;
     margin-bottom: 1.5rem;
     padding-left: 0.875rem;
-    border-left: 4px solid var(--cc-gold);
+    border-left: 4px solid var(--cc-yellow);
     font-style: italic;
 }
 
@@ -175,7 +178,7 @@ summary:focus-visible {
 }
 
 .search-panel label {
-    color: var(--cc-navy);
+    color: var(--cc-ink);
     font-weight: 700;
 }
 
@@ -198,14 +201,14 @@ summary:focus-visible {
     margin-bottom: 0.75rem;
     padding: 0.3rem 0.6rem;
     border-radius: 0.4rem;
-    background: var(--cc-gold-soft);
-    color: var(--cc-navy-dark);
+    background: var(--cc-yellow-soft);
+    color: var(--cc-ink-dark);
     font-size: 0.85rem;
     font-weight: 600;
 }
 
 .example-title {
-    color: var(--cc-navy);
+    color: var(--cc-ink);
 }
 
 .example-list {
@@ -220,7 +223,7 @@ summary:focus-visible {
 
 .example-list .bi {
     margin-right: 0.35rem;
-    color: var(--cc-navy);
+    color: var(--cc-ink);
 }
 
 .example-facts {
@@ -268,7 +271,7 @@ summary:focus-visible {
 }
 
 .count-list strong {
-    color: var(--cc-navy);
+    color: var(--cc-ink);
     font-size: 1.35rem;
 }
 
@@ -301,14 +304,14 @@ summary:focus-visible {
     border: 1px solid var(--cc-border);
     border-radius: 0.75rem;
     background: var(--cc-surface);
-    box-shadow: 0 1px 3px rgba(18, 48, 90, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     color: var(--cc-text);
     text-decoration: none;
 }
 
 a.info-card:hover {
-    border-color: var(--cc-navy);
-    box-shadow: 0 3px 10px rgba(18, 48, 90, 0.16);
+    border-color: var(--cc-ink);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
 }
 
 .info-card h3 {
@@ -325,7 +328,7 @@ a.info-card:hover {
 .card-icon {
     display: block;
     margin-bottom: 0.4rem;
-    color: var(--cc-navy);
+    color: var(--cc-ink);
     font-size: 1.5rem;
 }
 
@@ -337,8 +340,8 @@ a.info-card:hover {
     height: 2.25rem;
     margin-bottom: 0.5rem;
     border-radius: 50%;
-    background: var(--cc-gold);
-    color: var(--cc-navy-dark);
+    background: var(--cc-yellow);
+    color: var(--cc-ink-dark);
     font-weight: 700;
 }
 
@@ -368,7 +371,7 @@ a.info-card:hover {
 .status-pending { background: var(--cc-pending-bg); color: var(--cc-pending); }
 .status-outdated { background: var(--cc-outdated-bg); color: var(--cc-outdated); }
 .status-unavailable { background: var(--cc-unavailable-bg); color: var(--cc-unavailable); }
-.status-demo { background: var(--cc-navy); color: #ffffff; }
+.status-demo { background: var(--cc-ink); color: #ffffff; }
 
 /* ---------- Search page ---------- */
 
@@ -387,7 +390,7 @@ a.info-card:hover {
 
 .filter-panel summary {
     min-height: 32px;
-    color: var(--cc-navy);
+    color: var(--cc-ink);
     cursor: pointer;
     font-weight: 700;
 }
@@ -397,9 +400,9 @@ a.info-card:hover {
 }
 
 .pagination {
-    --bs-pagination-color: var(--cc-navy);
-    --bs-pagination-active-bg: var(--cc-navy);
-    --bs-pagination-active-border-color: var(--cc-navy);
+    --bs-pagination-color: var(--cc-ink);
+    --bs-pagination-active-bg: var(--cc-ink);
+    --bs-pagination-active-border-color: var(--cc-ink);
 }
 
 .page-link {
@@ -418,8 +421,8 @@ a.info-card:hover {
 .demo-warning {
     margin-bottom: 1.25rem;
     padding: 0.875rem 1rem;
-    border-left: 6px solid var(--cc-navy);
-    background: var(--cc-gold-soft);
+    border-left: 6px solid var(--cc-ink);
+    background: var(--cc-yellow-soft);
 }
 
 .checklist-actions {
@@ -447,13 +450,13 @@ a.info-card:hover {
     display: flex;
     align-items: center;
     min-height: 44px;
-    border: 1px solid var(--cc-navy);
-    color: var(--cc-navy);
+    border: 1px solid var(--cc-ink);
+    color: var(--cc-ink);
     font-weight: 600;
 }
 
 .variant-choice .nav-link.active {
-    background: var(--cc-navy);
+    background: var(--cc-ink);
     color: #ffffff;
 }
 
@@ -488,7 +491,7 @@ a.info-card:hover {
     height: 1.8rem;
     margin-right: 0.25rem;
     border-radius: 50%;
-    background: var(--cc-navy);
+    background: var(--cc-ink);
     color: #ffffff;
     font-size: 1rem;
 }
@@ -543,7 +546,7 @@ a.info-card:hover {
 
 .progress-bar {
     width: 0;
-    background: var(--cc-navy);
+    background: var(--cc-ink);
 }
 
 .document-list,
@@ -575,11 +578,11 @@ a.info-card:hover {
     width: 1.6rem;
     height: 1.6rem;
     margin: 0;
-    border: 2px solid var(--cc-navy);
+    border: 2px solid var(--cc-ink);
 }
 
 .document-item .form-check-input:checked {
-    background-color: var(--cc-navy);
+    background-color: var(--cc-ink);
 }
 
 .document-item .form-check-label {
@@ -626,8 +629,8 @@ a.info-card:hover {
     margin-left: 0.25rem;
     padding: 0.1rem 0.5rem;
     border-radius: 1rem;
-    background: var(--cc-gold-soft);
-    color: var(--cc-navy-dark);
+    background: var(--cc-yellow-soft);
+    color: var(--cc-ink-dark);
     font-size: 0.8rem;
 }
 
@@ -740,7 +743,7 @@ a.info-card:hover {
 }
 
 .stat-value {
-    color: var(--cc-navy);
+    color: var(--cc-ink);
     font-size: 1.9rem;
     font-weight: 700;
     line-height: 1.1;
@@ -784,7 +787,7 @@ a.info-card:hover {
     display: block;
     height: 100%;
     border-radius: 0 4px 4px 0;
-    background: var(--cc-navy);
+    background: var(--cc-ink);
 }
 
 .bar-value {
@@ -823,7 +826,7 @@ a.info-card:hover {
 .site-footer {
     flex-shrink: 0;
     padding: 2rem 0 1.25rem;
-    background: var(--cc-navy-dark);
+    background: var(--cc-ink-dark);
     color: #e8edf3;
     font-size: 0.95rem;
 }
@@ -844,6 +847,109 @@ a.info-card:hover {
     font-size: 0.875rem;
 }
 
+/* ---------- Brand details ---------- */
+
+/* A slim stripe in the flag's colour order. It's an accent, not the flag itself. */
+.flag-stripe {
+    height: 9px;
+    background: linear-gradient(
+        to bottom,
+        var(--cc-ink-dark) 0 33.33%,
+        var(--cc-yellow) 33.33% 66.66%,
+        var(--cc-red) 66.66% 100%
+    );
+}
+
+.site-header .nav-link:hover {
+    color: var(--cc-red);
+}
+
+.hero {
+    background:
+        radial-gradient(60rem 30rem at 85% 10%, rgba(252, 220, 4, 0.14), transparent 70%),
+        var(--cc-ink);
+}
+
+.hero h1 .highlight {
+    color: var(--cc-yellow);
+}
+
+.hero-question {
+    border-left-color: var(--cc-red);
+}
+
+/* A short red rule under each homepage section heading. */
+.page-section > .container > h2::after {
+    content: "";
+    display: block;
+    width: 3.5rem;
+    height: 4px;
+    margin-top: 0.6rem;
+    border-radius: 2px;
+    background: var(--cc-red);
+}
+
+.card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 0.7rem;
+    border-radius: 0.6rem;
+    background: var(--cc-yellow);
+    color: var(--cc-ink-dark);
+    font-size: 1.35rem;
+}
+
+a.info-card {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+a.info-card:hover {
+    border-color: var(--cc-ink);
+    transform: translateY(-2px);
+}
+
+.count-strip {
+    border-bottom: 0;
+    background: var(--cc-yellow);
+}
+
+.count-list strong,
+.count-list li,
+.count-note {
+    color: var(--cc-ink-dark);
+}
+
+.count-list strong {
+    font-size: 1.6rem;
+}
+
+/* The closing call to action on the homepage. */
+.cta-band {
+    background: var(--cc-ink);
+    color: #ffffff;
+}
+
+.cta-band h2 {
+    color: #ffffff;
+}
+
+.cta-band .section-intro {
+    color: #e6e6e6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    a.info-card {
+        transition: none;
+    }
+
+    a.info-card:hover {
+        transform: none;
+    }
+}
+
 /* ---------- Larger screens ---------- */
 
 @media (min-width: 768px) {
@@ -855,6 +961,7 @@ a.info-card:hover {
 /* ---------- Printing ---------- */
 
 @media print {
+    .flag-stripe,
     .independence-notice,
     .site-header,
     .site-footer,
