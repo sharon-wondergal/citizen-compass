@@ -16,10 +16,15 @@ STATUS_LABELS = {
 STATUS_RANK = ("unavailable", "outdated", "pending", "verified")
 
 
-def create_verification_records(service):
-    """Give a new service one pending record for each section."""
+def create_verification_records(service, editor=None):
+    """Give a new service one pending record for each section.
+
+    The creator counts as the editor, so they can't verify their own new service.
+    """
     for section in VERIFICATION_SECTIONS:
-        service.verification_records.append(VerificationRecord(section=section))
+        service.verification_records.append(
+            VerificationRecord(section=section, last_edited_by=editor)
+        )
 
 
 def effective_status(stored_status, review_due_on, today=None):

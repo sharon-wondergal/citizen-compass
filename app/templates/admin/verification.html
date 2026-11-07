@@ -1,0 +1,50 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import status_badge, empty_state %}
+
+{% block title %}Verification | Citizen Compass{% endblock %}
+
+{% macro queue_list(items) %}
+{% if items %}
+<ul class="admin-list">
+    {% for item in items %}
+    <li>
+        <div>
+            <span class="fw-bold">{{ item.name }}</span>
+            <div class="section-dates mb-1">{{ item.kind }}{% if item.due_on %} · Review date {{ item.due_on|long_date }}{% endif %}</div>
+            {{ status_badge(item.status, item.label) }}
+        </div>
+        {% if current_user.role in verify_roles %}
+        <a class="btn btn-sm btn-cc-primary" href="{{ url_for(item.target[0], **item.target[1]) }}">Review</a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+{{ empty_state("Nothing here.") }}
+{% endif %}
+{% endmacro %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container checklist-page">
+        <h1>Verification</h1>
+        <p class="section-intro">Check each item against its official source. Demonstration records aren't listed, because they can never be verified.</p>
+
+        <section class="checklist-section">
+            <h2 class="h5">Overdue ({{ queue.overdue|length }})</h2>
+            <p class="section-dates">Past the review date, or marked as outdated. Citizens see a warning on these.</p>
+            {{ queue_list(queue.overdue) }}
+        </section>
+
+        <section class="checklist-section">
+            <h2 class="h5">Due within 30 days ({{ queue.due_soon|length }})</h2>
+            {{ queue_list(queue.due_soon) }}
+        </section>
+
+        <section class="checklist-section">
+            <h2 class="h5">Waiting for review ({{ queue.waiting|length }})</h2>
+            {{ queue_list(queue.waiting) }}
+        </section>
+    </div>
+</section>
+{% endblock %}

@@ -52,7 +52,15 @@
             <p class="section-dates">Any change to a section sends it back to pending verification.</p>
             <ul class="admin-list">
                 {% for section, status in sections %}
-                <li><span class="text-capitalize">{{ section }}</span> {{ status_badge(status, status_labels[status]) }}</li>
+                <li>
+                    <span class="text-capitalize">{{ section }}</span>
+                    <span class="admin-actions align-items-center">
+                        {{ status_badge(status, status_labels[status]) }}
+                        {% if current_user.role in verify_roles %}
+                        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.review_service_section', service_id=service.id, section=section) }}">Review</a>
+                        {% endif %}
+                    </span>
+                </li>
                 {% endfor %}
             </ul>
         </section>
@@ -136,11 +144,15 @@
                 {% for link in service.office_links %}
                 <li>
                     <span>{{ link.office.name }} <span class="section-dates">· {{ link.office.district.name }}</span></span>
-                    {% if can_edit %}
-                    <div class="admin-actions">
+                    <div class="admin-actions align-items-center">
+                        {{ status_badge(link.verification_status, status_labels[link.verification_status]) }}
+                        {% if current_user.role in verify_roles %}
+                        <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.review_link', service_id=service.id, link_id=link.id) }}">Review</a>
+                        {% endif %}
+                        {% if can_edit %}
                         {{ post_button(url_for('admin.delete_office_link', service_id=service.id, link_id=link.id), "Remove", "btn-outline-danger", "Remove this office from the service?") }}
+                        {% endif %}
                     </div>
-                    {% endif %}
                 </li>
                 {% endfor %}
             </ul>

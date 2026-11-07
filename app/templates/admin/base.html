@@ -3,6 +3,7 @@
 {% block navigation %}
 <ul class="navbar-nav ms-auto align-items-lg-center">
     <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.verification_queue') }}">Verification</a></li>
     <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.services') }}">Services</a></li>
     <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.records', kind_name='institutions') }}">Institutions</a></li>
     <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.records', kind_name='offices') }}">Offices</a></li>
@@ -10,6 +11,7 @@
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">More</a>
         <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" href="{{ url_for('admin.history') }}">History</a></li>
             <li><a class="dropdown-item" href="{{ url_for('admin.records', kind_name='categories') }}">Categories</a></li>
             <li><a class="dropdown-item" href="{{ url_for('admin.records', kind_name='regions') }}">Regions</a></li>
             <li><a class="dropdown-item" href="{{ url_for('admin.records', kind_name='districts') }}">Districts</a></li>

@@ -913,6 +913,27 @@ a.info-card:hover {
     overflow-wrap: anywhere;
 }
 
+.history-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.history-list > li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--cc-border);
+    overflow-wrap: anywhere;
+}
+
+.history-list .section-dates {
+    margin-bottom: 0.25rem;
+}
+
+.history-changes {
+    margin: 0.4rem 0 0;
+    font-size: 0.95rem;
+}
+
 .admin-actions {
     display: flex;
     flex-wrap: wrap;

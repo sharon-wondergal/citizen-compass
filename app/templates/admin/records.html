@@ -30,16 +30,19 @@
                     {% if row.record.is_demo %}{{ demo_badge() }}{% endif %}
                     {% if row.archived %}<span class="status-badge status-unavailable">Archived</span>{% endif %}
                 </div>
-                {% if current_user.role in edit_roles %}
                 <div class="admin-actions">
+                    {% if kind.has_status and current_user.role in verify_roles %}
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.review_record', kind_name=kind_name, record_id=row.record.id) }}">Review</a>
+                    {% endif %}
+                    {% if current_user.role in edit_roles %}
                     <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('admin.edit_record', kind_name=kind_name, record_id=row.record.id) }}">Edit</a>
                     {% if kind.can_archive %}
                     {{ post_button(url_for('admin.archive_record', kind_name=kind_name, record_id=row.record.id), "Restore" if row.archived else "Archive", confirm=none if row.archived else "Archive this record? Citizens will no longer see it.") }}
                     {% else %}
                     {{ post_button(url_for('admin.delete_directory_record', kind_name=kind_name, record_id=row.record.id), "Delete", "btn-outline-danger", "Delete this record? This can't be undone.") }}
                     {% endif %}
+                    {% endif %}
                 </div>
-                {% endif %}
             </li>
             {% endfor %}
         </ul>

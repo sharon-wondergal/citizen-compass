@@ -1,0 +1,49 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import form_field %}
+
+{% block title %}{{ title }} | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container admin-form">
+        <p><a href="{{ back_url }}">Back</a></p>
+        <h1 class="h2">{{ title }}</h1>
+        <p class="section-intro">Open the official source and compare it with the details below. Only choose Verified if they match.</p>
+
+        {% if is_demo %}
+        <p class="section-warning status-unavailable">This is a demonstration record, so it can't be verified.</p>
+        {% endif %}
+        {% if own_work %}
+        <p class="section-warning status-pending">{{ own_work_message }}</p>
+        {% endif %}
+        {% for problem in problems %}
+        <p class="section-warning status-pending">{{ problem }}</p>
+        {% endfor %}
+
+        <section class="checklist-section">
+            <h2 class="h5">What you're checking</h2>
+            {% if summary %}
+            <ul class="mb-0">
+                {% for line in summary %}<li>{{ line }}</li>{% endfor %}
+            </ul>
+            {% else %}
+            <p class="mb-0">Nothing has been entered in this section yet.</p>
+            {% endif %}
+            {% if source %}
+            <p class="mt-3 mb-0">Source on file: <a href="{{ source.url }}" target="_blank" rel="noopener noreferrer">{{ source.title }}</a></p>
+            {% endif %}
+        </section>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {% for field in form %}
+            {% if field.type not in ("CSRFTokenField", "HiddenField", "SubmitField") %}
+            {{ form_field(field) }}
+            {% endif %}
+            {% endfor %}
+            {{ form.submit(class="btn btn-cc-primary px-4") }}
+            <a class="btn btn-outline-secondary" href="{{ back_url }}">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

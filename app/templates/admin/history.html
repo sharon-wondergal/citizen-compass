@@ -1,0 +1,53 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import empty_state, pagination %}
+
+{% block title %}History | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container checklist-page">
+        <h1>History</h1>
+        <p class="section-intro">Every important administrative change, newest first. This record can't be edited.</p>
+
+        <form class="d-flex gap-2 mb-3 align-items-end" method="get">
+            <div class="flex-grow-1">
+                <label class="form-label fw-bold" for="history-action">Type of action</label>
+                <select class="form-select" id="history-action" name="action">
+                    <option value="">All actions</option>
+                    {% for item in actions %}
+                    <option value="{{ item }}" {% if item == action %}selected{% endif %}>{{ item.replace("_", " ")|capitalize }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-outline-secondary" type="submit">Show</button>
+        </form>
+
+        {% if results.items %}
+        <ul class="history-list">
+            {% for item in results.items %}
+            {% set entry = item.entry %}
+            <li>
+                <div class="fw-bold">{{ entry.action.replace("_", " ")|capitalize }}: {{ entry.record_label or entry.table_name }}</div>
+                <div class="section-dates">
+                    {{ entry.admin_user.full_name if entry.admin_user else "System" }} · {{ entry.created_at|long_date }} at {{ entry.created_at.strftime("%H:%M") }} UTC
+                </div>
+                {% if item.changes %}
+                <details>
+                    <summary>{{ item.changes|length }} {{ "change" if item.changes|length == 1 else "changes" }}</summary>
+                    <ul class="history-changes">
+                        {% for change in item.changes %}
+                        <li><strong>{{ change.field }}:</strong> {{ change.old }} → {{ change.new }}</li>
+                        {% endfor %}
+                    </ul>
+                </details>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {{ pagination(results, 'admin.history', {'action': action} if action else {}) }}
+        {% else %}
+        {{ empty_state("No changes have been recorded yet.") }}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

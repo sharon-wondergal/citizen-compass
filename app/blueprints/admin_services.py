@@ -133,7 +133,7 @@ def new_service():
         service = GovernmentService(created_by_id=current_user.id)
         apply_form(form, service)
         service.slug = unique_slug(GovernmentService, service.name)
-        create_verification_records(service)
+        create_verification_records(service, current_user)
 
         if save_change(service, {}, current_user):
             flash("Service added. Every section starts as pending verification.", "success")

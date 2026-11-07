@@ -7,7 +7,11 @@ their own app with a temporary database, separate from the development one.
 from flask import Flask
 
 from app import models  # noqa: F401 - loading the models registers the tables
-from app.blueprints import admin_directory, admin_services  # noqa: F401 - adds admin routes
+from app.blueprints import (  # noqa: F401 - loading these adds their admin routes
+    admin_directory,
+    admin_services,
+    admin_verification,
+)
 from app.blueprints.admin import admin_bp
 from app.blueprints.auth import auth_bp
 from app.blueprints.directory import directory_bp

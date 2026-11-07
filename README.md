@@ -23,7 +23,8 @@ Under development, stage by stage. The citizen pages work: homepage, service sea
 | 9 | Institution and office directories | Done |
 | 10 | Administrator login and dashboard | Done |
 | 11A | Managing records from the admin area | Done |
-| 11B | Verification workflow | Paused while the prototype is presented |
+| 11B | Verification workflow | Done |
+| 12 | Reviewing citizen reports in the admin area | Next |
 
 ## Presenting the prototype
 
