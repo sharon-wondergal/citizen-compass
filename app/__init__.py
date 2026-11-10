@@ -14,6 +14,7 @@ from app.blueprints import (  # noqa: F401 - loading these adds their admin rout
     admin_verification,
 )
 from app.blueprints.admin import admin_bp
+from app.blueprints.api import api_bp
 from app.blueprints.auth import auth_bp
 from app.blueprints.directory import directory_bp
 from app.blueprints.main import main_bp
@@ -58,3 +59,4 @@ def register_blueprints(app):
     app.register_blueprint(reports_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(api_bp)
