@@ -43,8 +43,13 @@ class Config:
     # Refuse oversized requests. Citizen reports are short text.
     MAX_CONTENT_LENGTH = 1024 * 1024
 
-    # Rate limit counts are kept in memory. Stage 15 reviews this for live use.
-    RATELIMIT_STORAGE_URI = "memory://"
+    # Where rate limit counts are kept. Memory suits one process. A server with
+    # several worker processes needs shared storage, such as redis://...
+    RATELIMIT_STORAGE_URI = os.environ.get("RATELIMIT_STORAGE_URI", "memory://")
+
+    # Set to 1 when a hosting service passes requests through its own proxy,
+    # so the app sees each visitor's real address and protocol.
+    TRUST_PROXY = os.environ.get("TRUST_PROXY") == "1"
 
 
 class DevelopmentConfig(Config):

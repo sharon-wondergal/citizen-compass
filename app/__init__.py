@@ -5,6 +5,7 @@ their own app with a temporary database, separate from the development one.
 """
 
 from flask import Flask
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from app import models  # noqa: F401 - loading the models registers the tables
 from app.blueprints import (  # noqa: F401 - loading these adds their admin routes
@@ -24,6 +25,7 @@ from app.cli import register_commands
 from app.config import get_config, validate_config
 from app.errors import register_error_handlers
 from app.extensions import csrf, db, limiter, login_manager, migrate
+from app.security import register_security_headers
 from app.template_helpers import register_template_helpers
 
 
@@ -34,10 +36,15 @@ def create_app(config_name=None):
     app.config.from_object(get_config(config_name))
     validate_config(app)
 
+    if app.config["TRUST_PROXY"]:
+        # Trust one proxy in front of the app, and no more.
+        app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+
     register_extensions(app)
     register_blueprints(app)
     register_error_handlers(app)
     register_template_helpers(app)
+    register_security_headers(app)
     register_commands(app)
 
     return app
