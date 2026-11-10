@@ -1,0 +1,69 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import bar_table, empty_state %}
+
+{% block title %}Analytics | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <h1>Analytics</h1>
+        <p class="section-intro">Where citizens need better information. Searches and views cover the last {{ insights.period_days }} days. None of this identifies a visitor.</p>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="info-card">
+                    <h2 class="h5">Most searched</h2>
+                    {{ bar_table(insights.searched, "Most searched words", "No searches yet.") }}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="info-card">
+                    <h2 class="h5">Searches that found nothing</h2>
+                    <p class="section-dates">Services citizens look for that aren't listed yet.</p>
+                    {{ bar_table(insights.failed_searches, "Searches with no results", "Every search found something.") }}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="info-card">
+                    <h2 class="h5">Most viewed services</h2>
+                    {{ bar_table(insights.viewed, "Most viewed services", "No views yet.") }}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="info-card">
+                    <h2 class="h5">Most requested institutions</h2>
+                    <p class="section-dates">Institution page views plus searches that led to them.</p>
+                    {{ bar_table(insights.institutions, "Most requested institutions", "No requests yet.") }}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="info-card">
+                    <h2 class="h5">Most reported services</h2>
+                    {{ bar_table(insights.reported, "Services with the most reports", "No reports yet.") }}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="info-card">
+                    <h2 class="h5">Common preparation problems</h2>
+                    <p class="section-dates">What citizens report most often.</p>
+                    {{ bar_table(insights.problems, "Reported problem types", "No reports yet.") }}
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="info-card">
+                    <h2 class="h5">Services with outdated information</h2>
+                    {% if insights.outdated %}
+                    <ul class="admin-list">
+                        {% for service in insights.outdated %}
+                        <li><a href="{{ url_for('admin.manage_service', service_id=service.id) }}">{{ service.name }}</a><span class="section-dates mb-0">{{ service.institution.name }}</span></li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    {{ empty_state("Nothing is outdated.") }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

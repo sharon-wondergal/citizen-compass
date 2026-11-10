@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import empty_state, pagination %}
+
+{% block title %}Citizen reports | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container checklist-page">
+        <h1>Citizen reports</h1>
+        <p class="section-intro">Check each report against the official source before changing anything. Reports are never published.</p>
+
+        <nav class="variant-choice" aria-label="Filter reports">
+            <ul class="nav nav-pills">
+                {% for value, label in filters.items() %}
+                <li class="nav-item">
+                    <a class="nav-link {% if value == status_filter %}active{% endif %}"
+                       {% if value == status_filter %}aria-current="true"{% endif %}
+                       href="{{ url_for('admin.reports', status=value) }}">{{ label }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        <p class="fw-bold" role="status">{{ results.total }} {{ "report" if results.total == 1 else "reports" }}</p>
+
+        {% if results.items %}
+        <ul class="admin-list">
+            {% for report in results.items %}
+            <li>
+                <div>
+                    <a class="fw-bold" href="{{ url_for('admin.report_detail', report_id=report.id) }}">{{ report.reference_code }}: {{ problem_labels[report.problem_type] }}</a>
+                    <div class="section-dates mb-0">{{ report.service_name }} · {{ report.submitted_at|long_date }} · {{ report_status_labels[report.status] }}</div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {{ pagination(results, 'admin.reports', {'status': status_filter}) }}
+        {% else %}
+        {{ empty_state("No reports here.") }}
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

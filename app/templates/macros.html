@@ -102,6 +102,29 @@
 </form>
 {% endmacro %}
 
+{# A bar chart drawn as a table, so screen readers can read every number. #}
+{% macro bar_table(rows, caption, empty_message) %}
+{% if rows %}
+<table class="bar-table">
+    <caption class="visually-hidden">{{ caption }}</caption>
+    <thead class="visually-hidden">
+        <tr><th scope="col">Item</th><th scope="col">Share</th><th scope="col">Count</th></tr>
+    </thead>
+    <tbody>
+        {% for row in rows %}
+        <tr title="{{ row.label }}: {{ row.count }}">
+            <th scope="row">{{ row.label }}</th>
+            <td class="bar-cell"><span class="bar-track"><span class="bar-fill" style="width: {{ row.percent }}%"></span></span></td>
+            <td class="bar-value">{{ row.count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+{{ empty_state(empty_message) }}
+{% endif %}
+{% endmacro %}
+
 {# A card that is a link only when there is a real page to link to. #}
 {% macro info_card(href=none) %}
 {% if href %}

@@ -9,6 +9,7 @@ from flask import Flask
 from app import models  # noqa: F401 - loading the models registers the tables
 from app.blueprints import (  # noqa: F401 - loading these adds their admin routes
     admin_directory,
+    admin_reports,
     admin_services,
     admin_verification,
 )

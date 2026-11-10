@@ -913,6 +913,10 @@ a.info-card:hover {
     overflow-wrap: anywhere;
 }
 
+.report-text {
+    white-space: pre-wrap;
+}
+
 .history-list {
     margin: 0;
     padding: 0;

@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import form_field %}
+
+{% block title %}Report {{ report.reference_code }} | Citizen Compass{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container admin-form">
+        <p><a href="{{ url_for('admin.reports') }}">Back to reports</a></p>
+        <h1 class="h2">Report {{ report.reference_code }}</h1>
+
+        <section class="checklist-section">
+            <dl class="fact-list mb-0">
+                <div><dt>Problem</dt><dd>{{ problem_labels[report.problem_type] }}</dd></div>
+                <div><dt>Service</dt><dd>
+                    {% if report.service %}
+                    <a href="{{ url_for('admin.manage_service', service_id=report.service.id) }}">{{ report.service_name }}</a>
+                    {% else %}{{ report.service_name }} <span class="section-dates">(not linked to a listed service)</span>{% endif %}
+                </dd></div>
+                <div><dt>Received</dt><dd>{{ report.submitted_at|long_date }}</dd></div>
+                <div><dt>What the citizen said</dt><dd class="report-text">{{ report.description }}</dd></div>
+                <div><dt>Contact details</dt><dd>{{ report.contact_info or "None given" }}</dd></div>
+                {% if report.resolved_by %}
+                <div><dt>Closed by</dt><dd>{{ report.resolved_by.full_name }} on {{ report.resolved_at|long_date }}</dd></div>
+                {% endif %}
+            </dl>
+        </section>
+
+        <p class="section-warning status-pending">Don't change the service because of this report alone. Check the official source first, then edit the service, and record what you did here.</p>
+
+        <form method="post" novalidate>
+            {{ form.hidden_tag() }}
+            {{ form_field(form.status) }}
+            {{ form_field(form.action_taken) }}
+            {{ form.submit(class="btn btn-cc-primary px-4") }}
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -6,6 +6,7 @@ from sqlalchemy import select
 
 from app.extensions import db
 from app.logic.auth import create_admin
+from app.logic.report_review import remove_old_personal_data
 from app.models import AdminUser
 from app.models.base import ADMIN_ROLES
 from seed.categories import seed_categories
@@ -77,6 +78,14 @@ def list_admins_command():
         click.echo(f"{admin.email} | {admin.role} | {state}")
 
 
+@click.command("privacy-cleanup")
+def privacy_cleanup_command():
+    """Blank old report contacts and delete old searches. Run it regularly."""
+    blanked, deleted = remove_old_personal_data()
+    click.echo(f"Blanked {blanked} contact details. Deleted {deleted} old searches.")
+
+
 def register_commands(app):
     app.cli.add_command(seed_commands)
     app.cli.add_command(admin_commands)
+    app.cli.add_command(privacy_cleanup_command)
